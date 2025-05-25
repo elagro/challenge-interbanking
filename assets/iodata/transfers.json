@@ -45,6 +45,21 @@
     "effectiveDate": "2025-05-23T10:00:00.000Z"
   },
   {
+    "createdAt": "2025-05-25T03:44:32.354Z",
+    "createdBy": "Myself",
+    "id": "189b2c79-728a-4f10-9bf0-ecda8b361819",
+    "companyIdFrom": "1e16b28e-63c6-42e3-b9db-4ac1ddc3f987",
+    "accountIdFrom": "ACC-001-2024-0001",
+    "amount": 15000.5,
+    "currency": "USD",
+    "companyIdTo": "550e8400-e29b-41d4-a716-446655440002",
+    "accountIdTo": "ACC-002-2024-0005",
+    "concept": "Payment for services rendered",
+    "reference": "INV-2024-001234",
+    "controlNumber": "TXN-240522-001",
+    "effectiveDate": "2025-05-23T10:00:00.000Z"
+  },
+  {
     "companyIdFrom": "1e16b28e-63c6-42e3-b9db-4ac1ddc3f987",
     "accountIdFrom": "ACC-001-2024-0001",
     "amount": 15000.5,
@@ -55,8 +70,8 @@
     "reference": "INV-2024-001234",
     "controlNumber": "TXN-240522-001",
     "effectiveDate": "2025-05-23T10:00:00.000Z",
-    "id": "189b2c79-728a-4f10-9bf0-ecda8b361819",
-    "createdAt": "2025-05-25T03:44:32.354Z",
+    "id": "b89de150-a8c5-4a17-9e07-351f4b22e865",
+    "createdAt": "2025-05-25T05:25:26.091Z",
     "createdBy": "Myself"
   }
 ]

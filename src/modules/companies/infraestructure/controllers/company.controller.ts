@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CompanyResponseDto } from './company.response.dto';
 import { GetCompanyUseCases } from '../../application/usecases/getCompany.usecases';
-import { ApiResponseError, ApiResponseSuccess, ApiResponseErrorDetail, BaseApiResponse } from 'src/shared/model/api.model';
+import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
 import { CompanyRequestDto } from './company.request.dto';
 import { CreateCompanyUseCases } from '../../application/usecases/createCompany.usecases';
 import { plainToInstance } from 'class-transformer';
@@ -11,6 +11,8 @@ import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecas
 
 @Controller('company')
 export class CompanyController {
+  private readonly COMPANY_ERROR = 'COMPANY_ERROR';
+
   constructor(
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
@@ -28,11 +30,11 @@ export class CompanyController {
       return response
 
     } catch (error) {
-      const code = 'COMPANY_NOT_FOUND';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al obtener la empresa', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.COMPANY_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
 
@@ -53,11 +55,11 @@ export class CompanyController {
       return response
 
     } catch (error) {
-      const code = 'COMPANY_NOT_FOUND';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al obtener la empresa', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.COMPANY_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
 
@@ -72,11 +74,11 @@ export class CompanyController {
       return response
 
     } catch (error) {
-      const code = 'COMPANY_NOT_FOUND';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al obtener la empresa', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.COMPANY_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
 
@@ -96,11 +98,11 @@ export class CompanyController {
       const response = new ApiResponseSuccess(companyResponseDto);
       return response;
     } catch (error) {
-      const code = 'COMPANY_NOT_CREATED';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al crear la empresa', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.COMPANY_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
 }
