@@ -8,6 +8,8 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
+  
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector),
       { strategy: 'excludeAll', }
@@ -23,7 +25,6 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService);
-
   const appConfig = AppConfig.getInstance().init(configService);
   const port = appConfig.PORT;
 
