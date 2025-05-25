@@ -7,6 +7,7 @@ import { CreateCompanyUseCases } from '../../application/usecases/createCompany.
 import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
+import { GetCompaniesWithTransfersByRegistrationDateUseCase } from '../../application/usecases/getCompaniesWithTransfersInLastMonth.usecases';
 
 
 @Controller('company')
@@ -17,6 +18,7 @@ export class CompanyController {
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
     private readonly getCompaniesByRegistrationDateUseCases: GetCompaniesByRegistrationDateUseCases,
+    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByRegistrationDateUseCase,
     private readonly createCompanyUseCases: CreateCompanyUseCases,
   ) { }
 
@@ -49,6 +51,32 @@ export class CompanyController {
       const toDate = new Date();
 
       const companies = await this.getCompaniesByRegistrationDateUseCases.execute(fromDate, toDate);
+      const companiesResponseDto = CompanyResponseDto.toResponseDtos(companies);
+
+      const response = new ApiResponseSuccess(companiesResponseDto);
+      return response
+
+    } catch (error) {
+      const message = String(error.message);
+      throw new BadRequestException(this.COMPANY_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
+    }
+  }
+
+  
+  /**
+   * Obtener las empresas que se adhirieron en el último mes.
+   */
+  @Get('/withTransfersInLastMonth')
+  async getCompaniesWithTransfersInLastMonth(): Promise<BaseApiResponse<CompanyResponseDto[]>> {
+    try {
+      const fromDate = new Date();
+      fromDate.setMonth(fromDate.getMonth() - 1);
+      const toDate = new Date();
+
+      const companies = await this.getCompaniesWithTransfersByRegistrationDateUseCase.execute(fromDate, toDate);
       const companiesResponseDto = CompanyResponseDto.toResponseDtos(companies);
 
       const response = new ApiResponseSuccess(companiesResponseDto);

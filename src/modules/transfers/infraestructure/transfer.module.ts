@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { GetTransfersByRegistrationDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
 import { SimplyArrayTransferRepository } from './repositories/transfer.repository';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
@@ -9,7 +9,7 @@ import { CompanyModule } from 'src/modules/companies/infraestructure/company.mod
 
 @Module({
   imports: [
-    CompanyModule,
+    forwardRef(() => CompanyModule)
   ],
   controllers: [TransferController],
   providers: [
