@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "name": "Doe Company",
+    "cuit": "20-12345678-9",
+    "address": "Av. Branch 159",
+    "phone": "123-456-7890",
+    "email": "info@ib.c0m",
+    "registrationDate": "2020-05-25T00:00:00.000Z",
+    "createdAt": "2020-05-25T00:00:00.000Z",
+    "createdBy": "Jhon Doe"
+  },
+  {
+    "id": "2",
+    "name": "Flasa Holdings",
+    "cuit": "23-98765432-1",
+    "address": "Ing. Main 357",
+    "phone": "654-3210",
+    "email": "pipiripi@bankinginter.moc.ra",
+    "registrationDate": "2023-10-04T00:00:00.000Z",
+    "createdAt": "2023-01-01T00:00:00.000Z",
+    "createdBy": "Pachu Michu",
+    "updatedAt": "2025-05-25T02:52:07.269Z",
+    "updatedBy": "Lio Issem"
+  },
+  {
+    "name": "Nueva Cia",
+    "cuit": "20-18763432-0",
+    "address": "Ing. Arcos 357",
+    "phone": "+54-654-3210",
+    "email": "hola@mundo.qwe.rty",
+    "registrationDate": "2025-05-23T10:00:00.000Z",
+    "id": "1e16b28e-63c6-42e3-b9db-4ac1ddc3f987",
+    "createdAt": "2025-05-25T02:56:51.753Z",
+    "createdBy": "Myself"
+  }
+]
