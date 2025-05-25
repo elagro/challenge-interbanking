@@ -1,5 +1,5 @@
-import { Expose, Transform, Type } from "class-transformer";
-import { IsDate, IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsNotEmpty, IsString } from "class-validator";
 import { TransferEntityDto } from "../../domain/transfer.entity";
 
 export class TransferRequestDto {

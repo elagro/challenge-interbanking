@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiResponseError, ApiResponseErrorDetail, ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
 import { GetTransfersByRegistrationDateUseCases } from '../../application/usecases/getTransfersByRegistrationDate.usecases';
 import { GetTransfersUseCases } from '../../application/usecases/getTransfers.usecases';

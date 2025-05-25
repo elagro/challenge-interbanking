@@ -5,7 +5,6 @@ import { ApiResponseError, ApiResponseSuccess, ApiResponseErrorDetail, BaseApiRe
 import { CompanyRequestDto } from './company.request.dto';
 import { CreateCompanyUseCases } from '../../application/usecases/createCompany.usecases';
 import { plainToInstance } from 'class-transformer';
-import { AppConfig } from 'src/config/env.config';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
 

@@ -1,12 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { Expose } from "class-transformer";
 import { AppConfig } from "src/config/env.config";
 
 @Injectable()
 export class ApiResponseErrorDetail {
-    private ConfigService: ConfigService;
-
     @Expose()
     code: string;
     

@@ -1,6 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import * as path from 'path'; // ¡Esta línea es la clave!
-import * as fs from 'fs'; // Prob
+import * as path from 'path';
+import * as fs from 'fs';
 
 export class FilePersist {
     private filePath: string;
@@ -26,14 +25,11 @@ export class FilePersist {
                 dataArray = JSON.parse(data) as unknown[];
                 console.log(`Data loaded from ${this.filePath}`);
             } else {
-                // Si el archivo no existe, inicializa con un array vacío y crea el archivo
-                //dataArray = [];
                 await this.save();
                 console.log(`No data file found, created empty file at ${this.filePath}`);
             }
         } catch (error) {
             console.error(`Error loading data from file ${this.filePath}:`, error);
-            //dataArray = [];
         }
         return dataArray;
     }

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { CompanyEntityDto } from "../../domain/company.entity";
 import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repository";
 
