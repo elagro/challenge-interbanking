@@ -2,6 +2,13 @@ import { APIGatewayEvent, Context, APIGatewayProxyResult } from 'aws-lambda';
 import { CompanyEntity, CompanyRequest } from './model';
 import { allHaveValues } from 'src_lamdas/shared/compare';
 import { randomUUID } from 'node:crypto';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+
+const TABLE_NAME = 'CompanyTable';
+
+const client = new DynamoDBClient({});
+const ddbDocClient = DynamoDBDocumentClient.from(client);
 
 export const handler = async (event: APIGatewayEvent, _context: Context): Promise<APIGatewayProxyResult> => {
   try {
@@ -17,7 +24,7 @@ export const handler = async (event: APIGatewayEvent, _context: Context): Promis
 
     const companyEntity = new CompanyEntity(companyRequest);
 
-    saveMock(companyEntity)
+    await saveCompany(companyEntity);
 
     return {
       statusCode: 201,
@@ -40,4 +47,13 @@ export const handler = async (event: APIGatewayEvent, _context: Context): Promis
 function saveMock(companyEntity: CompanyEntity) {
     companyEntity.id = randomUUID();
     console.log('Company saved:', companyEntity);
+}
+
+async function saveCompany(companyEntity: CompanyEntity) {
+  const command = new PutCommand({
+    TableName: TABLE_NAME,
+    Item: companyEntity
+  });
+
+  await ddbDocClient.send(command);
 }
