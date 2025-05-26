@@ -42,6 +42,7 @@ export const handler = async (event: APIGatewayEvent, _context: Context): Promis
 };
 
 async function saveCompany(companyEntity: CompanyEntity) {
+  companyEntity.id = randomUUID();
   const command = new PutCommand({
     TableName: TABLE_NAME,
     Item: companyEntity
