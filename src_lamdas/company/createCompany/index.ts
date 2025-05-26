@@ -41,15 +41,8 @@ export const handler = async (event: APIGatewayEvent, _context: Context): Promis
   }
 };
 
-/**
- * Función mock para guardar la compañia
- */
-function saveMock(companyEntity: CompanyEntity) {
-    companyEntity.id = randomUUID();
-    console.log('Company saved:', companyEntity);
-}
-
 async function saveCompany(companyEntity: CompanyEntity) {
+  companyEntity.id = randomUUID();
   const command = new PutCommand({
     TableName: TABLE_NAME,
     Item: companyEntity
