@@ -1,98 +1,154 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏢 Empresas & Transferencias API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este challenge consiste en una API desarrollada en Node.js, Typescript y NestJS para gestionar información de **empresas** y sus **transferencias**, diseñada con foco en **Clean Code**, **arquitectura limpia** y **escalabilidad**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📌 Descripción General
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Esta solución expone las API de **empresas** y **transferencias** y sus respectivos endpoints RESTful para:
 
-## Project setup
+- Empresas:
+  - Registrar nuevas empresas.
+  - Consultar todas las empresas.
+  - Consultar empresa por ID.
+  - Consultar empresas registradas el último mes.
+  - Consultar empresas que realizaron transferencias el último mes.
+
+- Transferencias:
+  - Registrar nuevas transferencias.
+  - Consultar todas las transferencias.
+  - Consultar transferencias realizadas el último mes.
+
+La solución también incluye el diseño teórico de una **AWS Lambda** que registra la adhesión de una nueva empresa, lista para ser desacoplada del monolito si se desea evolucionar hacia una arquitectura serverless o basada en microservicios.
+
+---
+
+## 🎯 Requerimientos Funcionales
+
+La API implementa los siguientes endpoints:
+
+### 🏢 Empresa
+
+1. **GET** `/api/company`  
+   Devuelve todas empresas.
+
+2. **GET** `/api/company/:id`  
+   Devuelve si existe la compañía por ID.
+
+3. **GET** `/api/company/addedLastMonth`  
+   Devuelve las empresas que se registraron en el último mes.
+
+4. **GET** `/api/company/withTransfersInLastMonth`  
+   Devuelve las empresas que poseen transferencias realizadas el último mes.
+
+5. **POST** `/api/company`  
+   Registra la adhesión de una nueva empresa.
+
+### 💸 Transferencia
+
+1. **GET** `/api/transfer`  
+   Devuelve todas transferencias.
+
+2. **GET** `/api/transfer/madeLastMonth`  
+  Devuelve las transferencias realizadas el último mes.
+
+3. **POST** `/api/transfer`  
+   Registra una nueva transferencia.
+
+### λ AWS Lambda
+
+La función Lambda presentada es una propuesta técnica y funcional de alto nivel, diseñada para demostrar cómo implementar un servicio detrás de API Gateway en AWS. Para la persistencia de datos se utilizó una solución sencilla basada en una tabla de DynamoDB.
+
+**🧩Propuestas de integración**
+A continuación se detallan posibles integraciones con el sistema actual, pensadas en función de necesidades comunes del negocio:
+
+1. **Migración del monolito a arquitectura serverless**
+Se plantea una transición gradual hacia servicios serverless, manteniendo el monolito original sin modificaciones desde la perspectiva de los consumidores. Para minimizar el impacto en los tiempos de respuesta que puede delegar ciertas funcionalidades a una Lambda, se propone invocarla desde el monolito utilizando el SDK de AWS.
+
+2. **Exposición de la Lambda a través de HTTP**
+Se sugiere exponer la función Lambda mediante API Gateway, lo que permite consumirla como un servicio HTTP tradicional siguiendo el estilo REST.
+
+---
+
+## 🧰 Requerimientos Técnicos
+
+- **Lenguaje & Framework:**
+  - Node.js + Typescrpt
+  - NestJS
+  - AWS Lambda + API Gateway + DynamoDB
+- **Persistencia:**
+  - Backend: en memoria + Archivo JSON
+  - Lambda: DynamoDB (implementación básica)
+- **Arquitectura:**
+  - Hexagonal
+
+---
+
+## 🧪 Pruebas
+
+El proyecto incluye cuatro pruebas unitarias usando:
+
+- Jest
+- Mocks de persistencia
+- Cobertura básica de casos de éxito y error
+
+Ejecutar pruebas:
 
 ```bash
-$ npm install
+npm test
 ```
 
-## Compile and run the project
+## 🚀 Cómo iniciar el proyecto
 
-```bash
-# development
-$ npm run start
+Seguí estos pasos para correr la aplicación de forma local:
 
-# watch mode
-$ npm run start:dev
+### 📦 Instalación
 
-# production mode
-$ npm run start:prod
-```
+1. Descomprimí el .zip o cloná este repositorio:
+  
+   ```bash
+   git clone https://github.com/elagro/challenge-interbanking.git
+   cd challenge-interbanking
+   ```
+  
+2. Instalá las dependencias:
 
-## Run tests
+   ```bash
+   npm install
+   ```
 
-```bash
-# unit tests
-$ npm run test
+3. Variables de entorno:
 
-# e2e tests
-$ npm run test:e2e
+   Se deben utilizar las siguientes variables de entorno
 
-# test coverage
-$ npm run test:cov
-```
+   ```bash
+   NODE_ENV='development'
+   PORT=3000
+   ```
 
-## Deployment
+4. Ejecución:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+   Ejecutá la aplicación:
+  
+   ```bash
+   npm run start
+   ```
+  
+   Debuguear la aplicación:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+   ```bash
+   npm run start:debug
+   ```
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+5. Acceder a la API
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+   la URL base es y puerto por defecto:
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+   ```curl
+   http://localhost:3000/api
+   ```
+6. Colección de Postman de ejemplo
+   ```
+   https://personal-3778.postman.co/workspace/nestDemo~9b4f2cf6-0451-4f36-9d46-9ef236d9842e/collection/7168484-aa5fbaec-7a44-428b-bec5-863a0d9641bd?action=share&creator=7168484
+   ```

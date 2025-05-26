@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiResponseError, ApiResponseErrorDetail, ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
+import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
 import { GetTransfersByRegistrationDateUseCases } from '../../application/usecases/getTransfersByRegistrationDate.usecases';
 import { GetTransfersUseCases } from '../../application/usecases/getTransfers.usecases';
 import { TransferResponseDto } from './transfer.response.dto';
@@ -10,6 +10,8 @@ import { CreateTransferUseCases } from '../../application/usecases/createTransfe
 
 @Controller('transfer')
 export class TransferController {
+  private readonly TRANSFER_ERROR = 'TRANSFER_ERROR';
+
   constructor(
     private readonly getTransfersUseCases: GetTransfersUseCases,
     private readonly getTransfersByRegistrationDateUseCases: GetTransfersByRegistrationDateUseCases,
@@ -26,11 +28,11 @@ export class TransferController {
       return response
 
     } catch (error) {
-      const code = 'TRANSFER_ERROR';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al obtener las transferencias', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.TRANSFER_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
 
@@ -51,15 +53,13 @@ export class TransferController {
       return response
 
     } catch (error) {
-      const code = 'TRANSFER_ERROR';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      return new ApiResponseError('Error al obtener las transferencias del último mes', errorDetaill);
+      const message = String(error.message);
+      throw new BadRequestException(this.TRANSFER_ERROR, {
+        cause: new Error(),
+        description: message,
+      });
     }
   }
-
-
 
   @Post()
   async postTransfer(@Body() transferRequestDtoPlain: TransferRequestDto): Promise<BaseApiResponse<TransferResponseDto>> {
@@ -74,12 +74,11 @@ export class TransferController {
       const response = new ApiResponseSuccess(transferResponseDto);
       return response;
     } catch (error) {
-      const code = 'TRANSFER_NOT_CREATED';
-
-      const errorDetaill = ApiResponseErrorDetail.constructorFromError(code, error);
-
-      const response = new ApiResponseError('Error al crear la transferencia', errorDetaill);
-      return response;
+      const message = String(error.message);
+      throw new BadRequestException(this.TRANSFER_ERROR, {
+        cause: new Error(),
+        description: message
+      });
     }
   }
 
