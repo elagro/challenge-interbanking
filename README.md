@@ -58,17 +58,16 @@ La API implementa los siguientes endpoints:
 
 ### λ AWS Lambda
 
-La lambda propuesta es un diseño técnico y funcional de alto nivel pensado para mostrar la forma de implementarla destras del servicio API Gateway de AWS.
+La función Lambda presentada es una propuesta técnica y funcional de alto nivel, diseñada para demostrar cómo implementar un servicio detrás de API Gateway en AWS. Para la persistencia de datos se utilizó una solución sencilla basada en una tabla de DynamoDB.
 
 **🧩Propuestas de integración**
-Se proponen las sigueintes integraciones al sistema actual en base a posibles requerimientos del negocio
+A continuación se detallan posibles integraciones con el sistema actual, pensadas en función de necesidades comunes del negocio:
 
-1. Migración del monolito a servicios serverless
-  La propuesta se basa en la idea de migrar todos los servicios a serverless pero de forma paulatina. Por ello se debe mantener el monolito activo y sin cambios de cara a los consumidores.
-  Para mitigar el tiempo de respuesta que implica desacomplar el comportamiento a una lambda se propone invocarla mediante la SDK de AWS
+1. **Migración del monolito a arquitectura serverless**
+Se plantea una transición gradual hacia servicios serverless, manteniendo el monolito original sin modificaciones desde la perspectiva de los consumidores. Para minimizar el impacto en los tiempos de respuesta que puede delegar ciertas funcionalidades a una Lambda, se propone invocarla desde el monolito utilizando el SDK de AWS.
 
-2. Exponer a lambda por HTTP
-  La exposición se realiza mediante API Gateway de AWS permitindo que la lambda se pueda consumir como un servicio clásico API REST
+2. **Exposición de la Lambda a través de HTTP**
+Se sugiere exponer la función Lambda mediante API Gateway, lo que permite consumirla como un servicio HTTP tradicional siguiendo el estilo REST.
 
 ---
 
@@ -77,7 +76,7 @@ Se proponen las sigueintes integraciones al sistema actual en base a posibles re
 - **Lenguaje & Framework:**
   - Node.js + Typescrpt
   - NestJS
-  - AWS Lambda + AWS DynamoDB
+  - AWS Lambda + API Gateway + DynamoDB
 - **Persistencia:**
   - Backend: en memoria + Archivo JSON
   - Lambda: DynamoDB (implementación básica)
@@ -88,10 +87,10 @@ Se proponen las sigueintes integraciones al sistema actual en base a posibles re
 
 ## 🧪 Pruebas
 
-El proyecto incluye pruebas unitarias usando:
+El proyecto incluye cuatro pruebas unitarias usando:
 
-- **Jest** (u otro framework según implementación)
-- Mocks para infraestructura externa
+- Jest
+- Mocks de persistencia
 - Cobertura básica de casos de éxito y error
 
 Ejecutar pruebas:
@@ -106,11 +105,11 @@ Seguí estos pasos para correr la aplicación de forma local:
 
 ### 📦 Instalación
 
-1. Cloná este repositorio:
+1. Descomprimí el .zip o cloná este repositorio:
   
    ```bash
-   git clone https://github.com/tu-usuario/tu-proyecto.git
-   cd tu-proyecto
+   git clone https://github.com/elagro/challenge-interbanking.git
+   cd challenge-interbanking
    ```
   
 2. Instalá las dependencias:
@@ -149,4 +148,7 @@ Seguí estos pasos para correr la aplicación de forma local:
    ```curl
    http://localhost:3000/api
    ```
-  
+6. Colección de Postman de ejemplo
+   ```
+   https://personal-3778.postman.co/workspace/nestDemo~9b4f2cf6-0451-4f36-9d46-9ef236d9842e/collection/7168484-aa5fbaec-7a44-428b-bec5-863a0d9641bd?action=share&creator=7168484
+   ```
