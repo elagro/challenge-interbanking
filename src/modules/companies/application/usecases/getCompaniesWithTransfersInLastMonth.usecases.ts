@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CompanyEntityDto } from "../../domain/company.entity";
 import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repository";
-import { GetTransfersByRegistrationDateUseCases } from "src/modules/transfers/application/usecases/getTransfersByRegistrationDate.usecases";
+import { GetTransfersByEffectiveDateUseCases } from "src/modules/transfers/application/usecases/getTransfersByRegistrationDate.usecases";
 
 @Injectable()
 export class GetCompaniesWithTransfersByRegistrationDateUseCase {
     constructor(
         @Inject(COMPANY_REPOSITORY)
         private readonly companyRepository: CompanyRepository,
-        private readonly getTransfersByRegistrationDateUseCases: GetTransfersByRegistrationDateUseCases,
+        private readonly getTransfersByRegistrationDateUseCases: GetTransfersByEffectiveDateUseCases,
     ) { }
 
     async execute(from: Date, to: Date): Promise<CompanyEntityDto[]> {

@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { GetTransfersByRegistrationDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
+import { GetTransfersByEffectiveDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
 import { TransferController } from './controllers/transfer.controller';
 import { GetTransfersUseCases } from '../application/usecases/getTransfers.usecases';
@@ -19,7 +19,7 @@ import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
   controllers: [TransferController],
   providers: [
     GetTransfersUseCases,
-    GetTransfersByRegistrationDateUseCases,
+    GetTransfersByEffectiveDateUseCases,
     CreateTransferUseCases,
     {
       provide: TRANSFER_REPOSITORY,
@@ -28,7 +28,7 @@ import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
   ],
   exports: [
     GetTransfersUseCases,
-    GetTransfersByRegistrationDateUseCases,
+    GetTransfersByEffectiveDateUseCases,
     CreateTransferUseCases,
     TRANSFER_REPOSITORY
   ],
