@@ -1,5 +1,5 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { GetTransfersByEffectiveDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
+import { GetTransfersByEffectiveDateUseCases } from '../application/usecases/getTransfersByEffectiveDate.usecases';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
 import { TransferController } from './controllers/transfer.controller';
 import { GetTransfersUseCases } from '../application/usecases/getTransfers.usecases';

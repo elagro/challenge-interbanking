@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
-import { GetTransfersByEffectiveDateUseCases } from '../../application/usecases/getTransfersByRegistrationDate.usecases';
+import { GetTransfersByEffectiveDateUseCases } from '../../application/usecases/getTransfersByEffectiveDate.usecases';
 import { GetTransfersUseCases } from '../../application/usecases/getTransfers.usecases';
 import { TransferResponseDto } from './transfer.response.dto';
 import { TransferRequestDto } from './transfer.request.dto';

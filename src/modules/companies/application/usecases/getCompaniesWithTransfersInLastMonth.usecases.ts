@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { CompanyEntityDto } from "../../domain/company.entity";
 import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repository";
-import { GetTransfersByEffectiveDateUseCases } from "src/modules/transfers/application/usecases/getTransfersByRegistrationDate.usecases";
+import { GetTransfersByEffectiveDateUseCases } from "src/modules/transfers/application/usecases/getTransfersByEffectiveDate.usecases";
 
 @Injectable()
 export class GetCompaniesWithTransfersByRegistrationDateUseCase {
