@@ -2,7 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AppConfig } from './config/env.config';
+import { appConfig } from './config/env.config';
 
 async function bootstrap() {
 
@@ -24,9 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  const configService = app.get(ConfigService);
-  const appConfig = AppConfig.getInstance().init(configService);
-  const port = appConfig.PORT;
+  const port = appConfig().PORT;
 
   await app.listen(port);
   console.log(`App inicializada. Escuchando en el puerto ${port}`);

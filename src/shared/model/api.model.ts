@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Expose } from "class-transformer";
-import { AppConfig } from "src/config/env.config";
+import { appConfig } from "src/config/env.config";
 
 @Injectable()
 export class ApiResponseErrorDetail {
@@ -23,7 +23,7 @@ export class ApiResponseErrorDetail {
     constructor(code: string, message: string, stack?: string) {
         this.code = code;
         this.message = message;
-        AppConfig.getInstance().NODE_ENV === 'development' ? this.stack = stack : undefined;
+        appConfig().NODE_ENV === 'development' ? this.stack = stack : undefined;
     }
 };
 
