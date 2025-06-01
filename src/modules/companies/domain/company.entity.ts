@@ -3,11 +3,14 @@ import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsOptional, IsString } from "class-validator";
 import { AuditBaseEntity } from "src/shared/audit/audit.entity";
 
-@Schema({ timestamps: true })
+@Schema({ 
+    timestamps: true,
+    toJSON: { virtuals: true, getters: true },
+    toObject: { virtuals: true, getters: true },
+})
 export class CompanyEntityDto extends AuditBaseEntity {
     @IsOptional()
     @IsString()
-    @Prop()
     id?: string;
     
     @IsString()
@@ -32,9 +35,13 @@ export class CompanyEntityDto extends AuditBaseEntity {
 
     @Type(() => Date)
     @IsDate()
-    @Prop({ type: Date, required: true })
+    @Prop({ type: Date, required: true, index: true })
     registrationDate: Date;
 }
 
 export type CompanyDocument = CompanyEntityDto & Document;
 export const CompanySchema = SchemaFactory.createForClass(CompanyEntityDto);
+
+CompanySchema.virtual('id').get(function() {
+  return this._id ? this._id.toHexString() : undefined;
+});

@@ -4,11 +4,14 @@ import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 import mongoose from "mongoose";
 import { AuditBaseEntity } from "src/shared/audit/audit.entity";
 
-@Schema({ timestamps: true })
+@Schema({ 
+    timestamps: true,
+    toJSON: { virtuals: true, getters: true },
+    toObject: { virtuals: true, getters: true },
+})
 export class TransferEntityDto extends AuditBaseEntity {
     @IsOptional()
     @IsString()
-    @Prop()
     id?: string;
     
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true })
@@ -48,9 +51,13 @@ export class TransferEntityDto extends AuditBaseEntity {
 
     @Type(() => Date)
     @IsDate()
-    @Prop({ required: true })
+    @Prop({ required: true, index: true })
     effectiveDate: Date;
 }
 
 export type TransferDocument = TransferEntityDto & Document;
 export const TransferSchema = SchemaFactory.createForClass(TransferEntityDto);
+
+TransferSchema.virtual('id').get(function() {
+  return this._id ? this._id.toHexString() : undefined;
+});
