@@ -4,7 +4,7 @@ import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repo
 import { GetTransfersByEffectiveDateUseCases } from "src/modules/transfers/application/usecases/getTransfersByEffectiveDate.usecases";
 
 @Injectable()
-export class GetCompaniesWithTransfersByRegistrationDateUseCase {
+export class GetCompaniesWithTransfersByEffectiveDateUseCase {
     constructor(
         @Inject(COMPANY_REPOSITORY)
         private readonly companyRepository: CompanyRepository,

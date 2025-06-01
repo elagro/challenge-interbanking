@@ -7,7 +7,7 @@ import { CreateCompanyUseCases } from '../../application/usecases/createCompany.
 import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
-import { GetCompaniesWithTransfersByRegistrationDateUseCase } from '../../application/usecases/getCompaniesWithTransfersInLastMonth.usecases';
+import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
 
 
 @Controller('company')
@@ -18,7 +18,7 @@ export class CompanyController {
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
     private readonly getCompaniesByRegistrationDateUseCases: GetCompaniesByRegistrationDateUseCases,
-    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByRegistrationDateUseCase,
+    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByEffectiveDateUseCase,
     private readonly createCompanyUseCases: CreateCompanyUseCases,
   ) { }
 
