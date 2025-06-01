@@ -3,7 +3,7 @@ import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsOptional, IsString } from "class-validator";
 import { AuditBaseEntity } from "src/shared/audit/audit.entity";
 
-@Schema({ timestamps: true, collection: 'companies2' })
+@Schema({ timestamps: true })
 export class CompanyEntityDto extends AuditBaseEntity {
     @IsOptional()
     @IsString()
