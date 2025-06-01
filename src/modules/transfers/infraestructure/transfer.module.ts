@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { GetTransfersByRegistrationDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
-import { SimplyArrayTransferRepository } from './repositories/transfer.repository';
+import { SimplyArrayTransferRepository } from './repositories/transfer.simply.repository';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
 import { TransferController } from './controllers/transfer.controller';
 import { GetTransfersUseCases } from '../application/usecases/getTransfers.usecases';
