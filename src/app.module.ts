@@ -11,6 +11,12 @@ import { MongooseModule } from '@nestjs/mongoose';
       isGlobal: true,
       validationSchema: validationSchema
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async () => ({
+        uri:  appConfig().MONGO_URI,
+      }),
+    }),
     ControllersModule,
   ],
   controllers: [],
