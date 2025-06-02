@@ -1,6 +1,6 @@
 # 🏢 Empresas & Transferencias API
 
-Este challenge consiste en una API desarrollada en Node.js, Typescript y NestJS para gestionar información de **empresas** y sus **transferencias**, diseñada con foco en **Clean Code**, **arquitectura limpia** y **escalabilidad**.
+Este challenge consiste en una API desarrollada en Node.js, Typescript y NestJS para gestionar información de **empresas** y sus **transferencias**, persistencia en base de datos NoSQL MongoDB y diseñada con foco en **Clean Code**, **arquitectura limpia** y **escalabilidad**.
 
 ---
 
@@ -58,7 +58,7 @@ La API implementa los siguientes endpoints:
 
 ### λ AWS Lambda
 
-La función Lambda presentada es una propuesta técnica y funcional de alto nivel, diseñada para demostrar cómo implementar un servicio detrás de API Gateway en AWS. Para la persistencia de datos se utilizó una solución sencilla basada en una tabla de DynamoDB.
+La función Lambda presentada es una propuesta técnica y funcional de alto nivel, diseñada para demostrar cómo implementar un servicio detrás de API Gateway en AWS. Para la persistencia y validación de datos se utilizó una solución sencilla basada en una tabla de DynamoDB.
 
 **🧩Propuestas de integración**
 A continuación se detallan posibles integraciones con el sistema actual, pensadas en función de necesidades comunes del negocio:
@@ -76,9 +76,10 @@ Se sugiere exponer la función Lambda mediante API Gateway, lo que permite consu
 - **Lenguaje & Framework:**
   - Node.js + Typescrpt
   - NestJS
+  - MongoDB + Mongoose
   - AWS Lambda + API Gateway + DynamoDB
 - **Persistencia:**
-  - Backend: en memoria + Archivo JSON
+  - Backend: MongoDB
   - Lambda: DynamoDB (implementación básica)
 - **Arquitectura:**
   - Hexagonal
@@ -125,6 +126,7 @@ Seguí estos pasos para correr la aplicación de forma local:
    ```bash
    NODE_ENV='development'
    PORT=3000
+   MONGO_URI='mongodb+srv://ibchallenge:UDtiWEv2T%40GQ642@ibchallenge.eo1b70x.mongodb.net/ibchallenge'
    ```
 
 4. Ejecución:
