@@ -3,11 +3,12 @@ import { TransferRepository } from "../../domain/transfer.repository";
 import { TransferDocument, TransferEntityDto } from "../../domain/transfer.entity";
 import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
+import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
 
 @Injectable()
 export class TransferMongoRepository implements TransferRepository {
-  
+
   constructor(
     @InjectModel(TransferEntityDto.name)
     private transferModel: Model<TransferDocument>,
@@ -24,7 +25,7 @@ export class TransferMongoRepository implements TransferRepository {
 
   async findById(id: string): Promise<TransferEntityDto | null> {
     const transfer = await this.transferModel.findById(id).exec();
-    
+
     if (!transfer) {
       return null;
     }
@@ -45,6 +46,62 @@ export class TransferMongoRepository implements TransferRepository {
         },
       })
       .exec();
+  }
+
+  async findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<Types.ObjectId[] | null> {
+    return this.transferModel
+      .aggregate([
+        {
+          $match: {
+            effectiveDate: {
+              $gte: from,
+              $lte: to
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$companyIdFrom"
+          }
+        }
+      ])
+      .exec();
+  }
+
+  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<CompanyEntityDto[]> {
+    const companies = await this.transferModel.aggregate<CompanyEntityDto>([
+      {
+        $match: {
+          effectiveDate: {
+            $gte: from,
+            $lte: to,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$companyIdFrom',
+        },
+      },
+      {
+        $lookup: {
+          from: 'companies',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'company',
+        },
+      },
+      {
+        $unwind: '$company',
+      },
+      {
+        $replaceRoot: {
+          newRoot: '$company',
+        },
+      },
+    ]);
+
+    return companies;
   }
 
   private async validateBeforeSave(transfer: TransferEntityDto) {
