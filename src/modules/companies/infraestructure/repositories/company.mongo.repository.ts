@@ -15,10 +15,7 @@ export class CompanyMongoRepository implements CompanyRepository {
 
   async save(company: CompanyEntityDto): Promise<CompanyEntityDto> {
 
-    this.validateBeforeSave(company);
-
-    //company.id = randomUUID();
-    //AuditBase.simpleAudit(company);
+    await this.validateBeforeSave(company);
 
     const newCompany = new this.companyModel(company);
     return newCompany.save();
@@ -58,12 +55,18 @@ export class CompanyMongoRepository implements CompanyRepository {
       .exec();
   }
 
-  private validateBeforeSave(company: CompanyEntityDto) {
-    console.log('Validating company before save:', company);
-    /*const hasCompanyWithSameCuit = this.companies.find((x) => x.cuit === company.cuit);
-    if (hasCompanyWithSameCuit) {
+  async findByCuit(cuit: string): Promise<CompanyEntityDto[] | null> {
+    return this.companyModel
+      .find({ cuit: cuit })
+      .exec();
+  }
+
+  private async validateBeforeSave(company: CompanyEntityDto) {
+   
+    const hasCompanyWithSameCuit = await this.findByCuit(company.cuit)
+    if (!!hasCompanyWithSameCuit) {
       throw new Error('Company with same CUIT already exists');
-    }*/
+    }
   }
 
 }
