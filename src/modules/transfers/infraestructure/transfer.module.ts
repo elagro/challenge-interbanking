@@ -1,29 +1,34 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { GetTransfersByRegistrationDateUseCases } from '../application/usecases/getTransfersByRegistrationDate.usecases';
-import { SimplyArrayTransferRepository } from './repositories/transfer.repository';
+import { GetTransfersByEffectiveDateUseCases } from '../application/usecases/getTransfersByEffectiveDate.usecases';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
 import { TransferController } from './controllers/transfer.controller';
 import { GetTransfersUseCases } from '../application/usecases/getTransfers.usecases';
 import { CreateTransferUseCases } from '../application/usecases/createTransfer.usecases';
 import { CompanyModule } from 'src/modules/companies/infraestructure/company.module';
+import { TransferMongoRepository } from './repositories/transfer.mongo.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
 
 @Module({
   imports: [
-    forwardRef(() => CompanyModule)
+    forwardRef(() => CompanyModule),
+    MongooseModule.forFeature([
+      { name: TransferEntityDto.name, schema: TransferSchema, collection: 'transfers' },
+    ]),
   ],
   controllers: [TransferController],
   providers: [
     GetTransfersUseCases,
-    GetTransfersByRegistrationDateUseCases,
+    GetTransfersByEffectiveDateUseCases,
     CreateTransferUseCases,
     {
       provide: TRANSFER_REPOSITORY,
-      useClass: SimplyArrayTransferRepository,
+      useClass: TransferMongoRepository,
     },
   ],
   exports: [
     GetTransfersUseCases,
-    GetTransfersByRegistrationDateUseCases,
+    GetTransfersByEffectiveDateUseCases,
     CreateTransferUseCases,
     TRANSFER_REPOSITORY
   ],

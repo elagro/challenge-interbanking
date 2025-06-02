@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ControllersModule } from './modules/controllers.module';
 import { ConfigModule } from '@nestjs/config';
-import { validationSchema } from './config/env.config';
+import { appConfig, validationSchema } from './config/env.config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: false,
+      load: [appConfig],
+      isGlobal: true,
       validationSchema: validationSchema
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async () => ({
+        uri:  appConfig().MONGO_URI,
+      }),
     }),
     ControllersModule,
   ],
