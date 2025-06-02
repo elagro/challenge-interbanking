@@ -55,9 +55,9 @@ export class CompanyMongoRepository implements CompanyRepository {
       .exec();
   }
 
-  async findByCuit(cuit: string): Promise<CompanyEntityDto[] | null> {
+  async findByCuit(cuit: string): Promise<CompanyEntityDto | null> {
     return this.companyModel
-      .find({ cuit: cuit })
+      .findOne({ cuit: cuit })
       .exec();
   }
 
@@ -68,5 +68,4 @@ export class CompanyMongoRepository implements CompanyRepository {
       throw new Error('Company with same CUIT already exists');
     }
   }
-
 }
