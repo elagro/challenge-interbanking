@@ -3,8 +3,9 @@ import { TransferRepository } from "../../domain/transfer.repository";
 import { TransferDocument, TransferEntityDto } from "../../domain/transfer.entity";
 import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
 import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
+import { ObjectId } from "src/shared/types/types";
 
 @Injectable()
 export class TransferMongoRepository implements TransferRepository {
@@ -48,7 +49,7 @@ export class TransferMongoRepository implements TransferRepository {
       .exec();
   }
 
-  async findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<Types.ObjectId[] | null> {
+  async findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null> {
     return this.transferModel
       .aggregate([
         {

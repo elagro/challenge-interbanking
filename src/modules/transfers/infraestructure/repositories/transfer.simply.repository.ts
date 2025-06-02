@@ -6,8 +6,8 @@ import { GetCompanyUseCases } from "src/modules/companies/application/usecases/g
 import { FilePersist } from "src/shared/filePersist/filePersist";
 import { AuditBase } from "src/shared/audit/audit.entity";
 import { plainToInstance } from "class-transformer";
-import { Types } from "mongoose";
 import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
+import { ObjectId } from "src/shared/types/types";
 
 @Injectable()
 export class SimplyArrayTransferRepository implements TransferRepository, OnModuleInit {
@@ -22,7 +22,7 @@ export class SimplyArrayTransferRepository implements TransferRepository, OnModu
     throw new Error("Method not implemented." + from + to);
   }
 
-  findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<Types.ObjectId[] | null> {
+  findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null> {
     throw new Error("Method not implemented." + from + to);
   }
 

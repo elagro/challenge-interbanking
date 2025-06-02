@@ -1,7 +1,7 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsString } from "class-validator";
 import { TransferEntityDto } from "../../domain/transfer.entity";
-import { Types } from "mongoose";
+import { ObjectId } from "src/shared/types/types";
 
 export class TransferRequestDto {
 
@@ -47,7 +47,7 @@ export class TransferRequestDto {
 
   toTransferDto(): TransferEntityDto {
     return {
-      companyIdFrom: new Types.ObjectId(this.companyIdFrom),
+      companyIdFrom: new ObjectId(this.companyIdFrom),
       accountIdFrom: this.accountIdFrom,
       amount: this.amount,
       currency: this.currency,

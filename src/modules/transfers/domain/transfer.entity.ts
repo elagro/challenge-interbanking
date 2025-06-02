@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Type } from "class-transformer";
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
-import mongoose, { Types } from "mongoose";
 import { AuditBaseEntity } from "src/shared/audit/audit.entity";
+import { ObjectId, ObjectIdSchemaType } from "src/shared/types/types";
 
 @Schema({
   timestamps: true,
@@ -10,14 +10,14 @@ import { AuditBaseEntity } from "src/shared/audit/audit.entity";
   toObject: { virtuals: true, getters: true },
 })
 export class TransferEntityDto extends AuditBaseEntity {
-  _id?: Types.ObjectId;
+  _id?: ObjectId;
 
   @IsOptional()
   @IsString()
   id?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'companies', required: true })
-  companyIdFrom: Types.ObjectId;
+  @Prop({ type: ObjectIdSchemaType, ref: 'companies', required: true })
+  companyIdFrom: ObjectId;
 
   @IsString()
   @Prop({ required: true })
