@@ -8,6 +8,7 @@ import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
 import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
+import { getObjectId, ObjectId } from 'src/shared/types/types';
 
 
 @Controller('company')
@@ -94,7 +95,8 @@ export class CompanyController {
   @Get('/:id')
   async getCompanyById(@Param('id') id: string): Promise<BaseApiResponse<CompanyResponseDto>> {
     try {
-      const company = await this.getCompanyUseCases.execute(id);
+      const idAsObjectId = getObjectId(id);
+      const company = await this.getCompanyUseCases.execute(idAsObjectId);
       const companyResponseDto = CompanyResponseDto.toResponseDto(company);
 
 

@@ -40,7 +40,6 @@ export abstract class BaseApiResponse<T = unknown> {
     @Expose()
     error?: ApiResponseErrorDetail;
 
-
     constructor(success: boolean, message?: string, data?: T, error?: ApiResponseErrorDetail) {
         this.success = success;
         this.message = message;

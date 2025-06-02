@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { FilePersist } from "src/shared/filePersist/filePersist";
 import { AuditBase } from "src/shared/audit/audit.entity";
 import { plainToInstance } from "class-transformer";
-import { Types } from "mongoose";
+import { ObjectId } from "src/shared/types/types";
 
 @Injectable()
 export class SimplyArrayCompanyRepository implements CompanyRepository, OnModuleInit  {
@@ -41,7 +41,7 @@ export class SimplyArrayCompanyRepository implements CompanyRepository, OnModule
       },
     ];*/
   } 
-  findByIds(ids: (Types.ObjectId | string)[]): Promise<CompanyEntityDto[] | null> {
+  findByIds(ids: (ObjectId | string)[]): Promise<CompanyEntityDto[] | null> {
     throw new Error("Method not implemented. " + ids.length);
   }
 
@@ -73,8 +73,9 @@ export class SimplyArrayCompanyRepository implements CompanyRepository, OnModule
     return company;
   }
 
-  async findById(id: string): Promise<CompanyEntityDto | null> {
-    const company = this.companies.find((company) => company.id === id);
+  async findById(id: ObjectId): Promise<CompanyEntityDto | null> {
+    const idString = id.toHexString();
+    const company = this.companies.find((company) => company.id === idString);
 
     if (!company) {
       return null;

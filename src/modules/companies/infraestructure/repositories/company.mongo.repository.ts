@@ -2,7 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { CompanyDocument, CompanyEntityDto } from "../../domain/company.entity";
 import { CompanyRepository } from "../../domain/company.repository";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model, Types } from "mongoose";
+import { Model } from "mongoose";
+import { ObjectId } from "src/shared/types/types";
 
 @Injectable()
 export class CompanyMongoRepository implements CompanyRepository {
@@ -23,7 +24,7 @@ export class CompanyMongoRepository implements CompanyRepository {
     return newCompany.save();
   }
 
-  async findById(id: string): Promise<CompanyEntityDto | null> {
+  async findById(id: ObjectId): Promise<CompanyEntityDto | null> {
     const company = await this.companyModel.findById(id).exec();
 
     if (!company) {
@@ -33,12 +34,12 @@ export class CompanyMongoRepository implements CompanyRepository {
     return company;
   }
 
-  async findByIds(ids: (Types.ObjectId | string)[]): Promise<CompanyDocument[]> {
+  async findByIds(ids: (ObjectId | string)[]): Promise<CompanyDocument[]> {
     if (!ids || ids.length === 0) {
       return [];
     }
 
-    const objectIds = ids.map(id => typeof id === 'string' ? new Types.ObjectId(id) : id);
+    const objectIds = ids.map(id => typeof id === 'string' ? new ObjectId(id) : id);
     return this.companyModel.find({ _id: { $in: objectIds } }).exec();
   }
 
