@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { FilePersist } from "src/shared/filePersist/filePersist";
 import { AuditBase } from "src/shared/audit/audit.entity";
 import { plainToInstance } from "class-transformer";
+import { Types } from "mongoose";
 
 @Injectable()
 export class SimplyArrayCompanyRepository implements CompanyRepository, OnModuleInit  {
@@ -40,6 +41,9 @@ export class SimplyArrayCompanyRepository implements CompanyRepository, OnModule
       },
     ];*/
   } 
+  findByIds(ids: (Types.ObjectId | string)[]): Promise<CompanyEntityDto[] | null> {
+    throw new Error("Method not implemented. " + ids.length);
+  }
 
   async onModuleInit() {
     try {

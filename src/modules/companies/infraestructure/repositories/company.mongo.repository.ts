@@ -2,16 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { CompanyDocument, CompanyEntityDto } from "../../domain/company.entity";
 import { CompanyRepository } from "../../domain/company.repository";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 @Injectable()
-export class CompanyMongoRepository implements CompanyRepository  {
+export class CompanyMongoRepository implements CompanyRepository {
 
-    constructor(
+  constructor(
     @InjectModel(CompanyEntityDto.name)
     private companyModel: Model<CompanyDocument>,
-  ) {}
-  
+  ) { }
+
   async save(company: CompanyEntityDto): Promise<CompanyEntityDto> {
 
     this.validateBeforeSave(company);
@@ -25,12 +25,21 @@ export class CompanyMongoRepository implements CompanyRepository  {
 
   async findById(id: string): Promise<CompanyEntityDto | null> {
     const company = await this.companyModel.findById(id).exec();
-    
+
     if (!company) {
       return null;
     }
 
     return company;
+  }
+
+  async findByIds(ids: (Types.ObjectId | string)[]): Promise<CompanyDocument[]> {
+    if (!ids || ids.length === 0) {
+      return [];
+    }
+
+    const objectIds = ids.map(id => typeof id === 'string' ? new Types.ObjectId(id) : id);
+    return this.companyModel.find({ _id: { $in: objectIds } }).exec();
   }
 
   async findAll(): Promise<CompanyEntityDto[] | null> {
