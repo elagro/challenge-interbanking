@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsOptional, IsString } from "class-validator";
+import { Types } from "mongoose";
 import { AuditBaseEntity } from "src/shared/audit/audit.entity";
 
 @Schema({ 
@@ -9,6 +10,8 @@ import { AuditBaseEntity } from "src/shared/audit/audit.entity";
     toObject: { virtuals: true, getters: true },
 })
 export class CompanyEntityDto extends AuditBaseEntity {
+    _id?: Types.ObjectId;
+    
     @IsOptional()
     @IsString()
     id?: string;
