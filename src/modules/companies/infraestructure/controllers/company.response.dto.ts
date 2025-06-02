@@ -30,8 +30,7 @@ export class CompanyResponseDto {
       return company;
     }
 
-
-    company.id = companyDto.id;
+    company.id = companyDto.id || companyDto._id?.toString();
     company.name = companyDto.name;
     company.cuit = companyDto.cuit;
     company.address = companyDto.address;

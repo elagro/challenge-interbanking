@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { CompanyResponseDto } from './company.response.dto';
 import { GetCompanyUseCases } from '../../application/usecases/getCompany.usecases';
 import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
@@ -7,7 +7,8 @@ import { CreateCompanyUseCases } from '../../application/usecases/createCompany.
 import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
-import { GetCompaniesWithTransfersByRegistrationDateUseCase } from '../../application/usecases/getCompaniesWithTransfersInLastMonth.usecases';
+import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
+import { getObjectId } from 'src/shared/types/types';
 
 
 @Controller('company')
@@ -18,7 +19,7 @@ export class CompanyController {
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
     private readonly getCompaniesByRegistrationDateUseCases: GetCompaniesByRegistrationDateUseCases,
-    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByRegistrationDateUseCase,
+    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByEffectiveDateUseCase,
     private readonly createCompanyUseCases: CreateCompanyUseCases,
   ) { }
 
@@ -94,10 +95,15 @@ export class CompanyController {
   @Get('/:id')
   async getCompanyById(@Param('id') id: string): Promise<BaseApiResponse<CompanyResponseDto>> {
     try {
-      const company = await this.getCompanyUseCases.execute(id);
+      const idAsObjectId = getObjectId(id);
+      const company = await this.getCompanyUseCases.execute(idAsObjectId);
+      
+      if (!company) {
+        throw new NotFoundException(`Company with id ${id} not found`);
+      }
+
       const companyResponseDto = CompanyResponseDto.toResponseDto(company);
-
-
+      
       const response = new ApiResponseSuccess(companyResponseDto);
       return response
 

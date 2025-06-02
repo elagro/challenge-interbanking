@@ -4,7 +4,7 @@ import { TRANSFER_REPOSITORY, TransferRepository } from "../../domain/transfer.r
 
 
 @Injectable()
-export class GetTransfersByRegistrationDateUseCases {
+export class GetTransfersByEffectiveDateUseCases {
     constructor(
         @Inject(TRANSFER_REPOSITORY) 
         private readonly transferRepository: TransferRepository,

@@ -43,8 +43,8 @@ export class TransferResponseDto {
       return transfer;
     }
 
-    transfer.id = transferDto.id;
-    transfer.companyIdFrom = transferDto.companyIdFrom;
+    transfer.id = transferDto.id || transferDto._id?.toString();
+    transfer.companyIdFrom = transferDto.companyIdFrom.toHexString();
     transfer.accountIdFrom = transferDto.accountIdFrom;
     transfer.amount = transferDto.amount;
     transfer.currency = transferDto.currency;
