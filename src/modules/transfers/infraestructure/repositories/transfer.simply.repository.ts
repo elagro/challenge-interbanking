@@ -6,6 +6,8 @@ import { GetCompanyUseCases } from "src/modules/companies/application/usecases/g
 import { FilePersist } from "src/shared/filePersist/filePersist";
 import { AuditBase } from "src/shared/audit/audit.entity";
 import { plainToInstance } from "class-transformer";
+import { Types } from "mongoose";
+import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
 
 @Injectable()
 export class SimplyArrayTransferRepository implements TransferRepository, OnModuleInit {
@@ -14,42 +16,15 @@ export class SimplyArrayTransferRepository implements TransferRepository, OnModu
 
   constructor(
     private readonly getCompanyUseCases: GetCompanyUseCases,
-  ) {
-    /*this.transfers = [
-      {
-        id: randomUUID(),
-        companyIdFrom: '1',
-        accountIdFrom: 'CA 100-4757801-3',
-        amount: 42239.00,
-        currency: 'ARS',
-
-        companyIdTo: '2',
-        accountIdTo: 'CC 015-997711-1',
-        
-        concept: 'varios',
-        reference: 'pago de servicios',
-        controlNumber: '1987',
-        effectiveDate: new Date('2025-05-24'),
-      },
-      {
-        id: randomUUID(),
-        companyIdFrom: '2',
-        accountIdFrom: 'CA 100-998877-3',
-        amount: 457.00,
-        currency: 'ARS',
-
-        companyIdTo: '1',
-        accountIdTo: 'CA 100-4757801-3',
-        
-        concept: 'Alquiler',
-        reference: 'pago de alquiler',
-        controlNumber: '0214',
-        effectiveDate: new Date('2025-04-23'),
-      }
-    ];*/
+  ) { }
+  
+  findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<CompanyEntityDto[]> {
+    throw new Error("Method not implemented." + from + to);
   }
 
-
+  findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<Types.ObjectId[] | null> {
+    throw new Error("Method not implemented." + from + to);
+  }
 
   async onModuleInit() {
     try {
