@@ -1,52 +1,32 @@
 import { APIGatewayEvent, Context, APIGatewayProxyResult } from 'aws-lambda';
-import { CompanyEntity, CompanyRequest } from './model';
-import { allHaveValues } from 'src_lamdas/shared/compare';
-import { randomUUID } from 'node:crypto';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
-
-const TABLE_NAME = 'CompanyTable';
-
-const client = new DynamoDBClient({});
-const ddbDocClient = DynamoDBDocumentClient.from(client);
+import { CompanyRequest } from './model';
+import { CompanyService } from '../service/company.service';
+import { GenericResponse } from 'src_lamdas/shared/genericResponse';
 
 export const handler = async (event: APIGatewayEvent, _context: Context): Promise<APIGatewayProxyResult> => {
   try {
     const body = JSON.parse(event.body || '{}');
-    const companyRequest = body as CompanyRequest;
+    const companyRequest = new CompanyRequest(body);
 
-    if (!allHaveValues(companyRequest.name, companyRequest.cuit, companyRequest.address, companyRequest.phone, companyRequest.email, companyRequest.registrationDate)) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Missing required fields' })
-      };
+    const isValidRequest = companyRequest.validate();
+    if (!isValidRequest) {
+      return GenericResponse.badRequest('Missing required fields');
     }
 
-    const companyEntity = new CompanyEntity(companyRequest);
+    const companyEntity = companyRequest.toEntity();
 
-    await saveCompany(companyEntity);
+    const companyService = new CompanyService();
+    const existCompany = await companyService.existCompany(companyEntity);
 
-    return {
-      statusCode: 201,
-      body: JSON.stringify({
-        message: 'Company successfully registered',
-        companyId: companyEntity.id
-      })
-    };
+    if (existCompany) {
+      return GenericResponse.badRequest('Company with this CUIT already exists');
+    }
+
+    await companyService.save(companyEntity);
+
+    return GenericResponse.created(companyEntity, 'Company successfully registered');
+    
   } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Internal Server Error' })
-    };
+    return GenericResponse.error('Internal Server Error');
   }
 };
-
-async function saveCompany(companyEntity: CompanyEntity) {
-  companyEntity.id = randomUUID();
-  const command = new PutCommand({
-    TableName: TABLE_NAME,
-    Item: companyEntity
-  });
-
-  await ddbDocClient.send(command);
-}
