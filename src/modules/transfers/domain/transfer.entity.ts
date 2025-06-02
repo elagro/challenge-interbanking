@@ -16,8 +16,8 @@ export class TransferEntityDto extends AuditBaseEntity {
   @IsString()
   id?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company', required: true })
-  companyIdFrom: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'companies', required: true })
+  companyIdFrom: Types.ObjectId;
 
   @IsString()
   @Prop({ required: true })
