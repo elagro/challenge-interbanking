@@ -1,12 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { GetTransfersByEffectiveDateUseCases } from '../application/usecases/getTransfersByEffectiveDate.usecases';
 import { TRANSFER_REPOSITORY } from '../domain/transfer.repository';
 import { TransferController } from './controllers/transfer.controller';
-import { GetTransfersUseCases } from '../application/usecases/getTransfers.usecases';
-import { CreateTransferUseCases } from '../application/usecases/createTransfer.usecases';
 import { CompanyModule } from 'src/modules/companies/infraestructure/company.module';
 import { TransferMongoRepository } from './repositories/transfer.mongo.repository';
 import { MongooseModule } from '@nestjs/mongoose';
+import { TransferUseCases } from '../application/transfer.usecases';
 import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
 
 @Module({
@@ -18,18 +16,14 @@ import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
   ],
   controllers: [TransferController],
   providers: [
-    GetTransfersUseCases,
-    GetTransfersByEffectiveDateUseCases,
-    CreateTransferUseCases,
+    TransferUseCases,
     {
       provide: TRANSFER_REPOSITORY,
       useClass: TransferMongoRepository,
     },
   ],
   exports: [
-    GetTransfersUseCases,
-    GetTransfersByEffectiveDateUseCases,
-    CreateTransferUseCases,
+    TransferUseCases,
     TRANSFER_REPOSITORY
   ],
 })
