@@ -126,7 +126,7 @@ Seguí estos pasos para correr la aplicación de forma local:
    ```bash
    NODE_ENV='development'
    PORT=3000
-   MONGO_URI='mongodb+srv://ibchallenge:UDtiWEv2T%40GQ642@ibchallenge.eo1b70x.mongodb.net/ibchallenge'
+   MONGO_URI=''
    ```
 
 4. Ejecución:
