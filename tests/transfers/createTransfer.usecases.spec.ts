@@ -1,6 +1,7 @@
 import { CreateTransferUseCases } from 'src/modules/transfers/application/usecases/createTransfer.usecases';
 import { TransferRepository } from 'src/modules/transfers/domain/transfer.repository';
 import { TransferEntityDto } from 'src/modules/transfers/domain/transfer.entity';
+import { ObjectId } from 'src/shared/types/types';
 
 describe('CreateTransferUseCases', () => {
     let createTransferUseCases: CreateTransferUseCases;
@@ -12,6 +13,8 @@ describe('CreateTransferUseCases', () => {
             findById: jest.fn(),
             findAll: jest.fn(),
             findByEffectiveDate: jest.fn(),
+            findUniqueCompaniesByEffectiveDate: jest.fn(),
+            findCompaniesWithTransfersInDateRange: jest.fn(),
         };
 
         //Instanciamos el caso de uso con el mock inyectado
@@ -21,7 +24,7 @@ describe('CreateTransferUseCases', () => {
     it('debería guardar una transferencia y devolverla', async () => {
         const transferDto: TransferEntityDto = {
             id: "1f4981ce-e36d-461b-a1c7-885a5545b903",
-            companyIdFrom: "5560e1ea-bbfe-4c2b-8e66-799ae3973b63",
+            companyIdFrom: new ObjectId("60d21b4667d0d8992e610c85"),
             accountIdFrom: "ACC-001-2024-0001",
             amount: 15000.5,
             currency: "USD",

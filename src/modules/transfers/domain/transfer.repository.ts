@@ -1,6 +1,6 @@
 import { ObjectId } from "src/shared/types/types";
 import { TransferEntityDto } from "./transfer.entity";
-import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
+import { Company } from "src/modules/companies/domain/company";
 
 export interface TransferRepository {
   save(transfer: TransferEntityDto): Promise<TransferEntityDto>;
@@ -8,7 +8,7 @@ export interface TransferRepository {
   findAll(): Promise<TransferEntityDto[] | null>;
   findByEffectiveDate(from: Date, to: Date): Promise<TransferEntityDto[] | null>;
   findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null>;
-  findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<CompanyEntityDto[]>; 
+  findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<Company[]>;
 }
 
 export const TRANSFER_REPOSITORY = Symbol('TRANSFER_REPOSITORY');

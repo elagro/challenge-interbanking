@@ -4,8 +4,10 @@ import { TransferDocument, TransferEntityDto } from "../../domain/transfer.entit
 import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
+import { Company } from "src/modules/companies/domain/company";
 import { ObjectId } from "src/shared/types/types";
+import { CompanyMapper } from "src/modules/companies/infraestructure/repositories/mappers/company.mapper";
+import { CompanyEntityDto } from "src/modules/companies/infraestructure/repositories/dtos/company.dto";
 
 @Injectable()
 export class TransferMongoRepository implements TransferRepository {
@@ -69,8 +71,8 @@ export class TransferMongoRepository implements TransferRepository {
       .exec();
   }
 
-  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<CompanyEntityDto[]> {
-    const companies = await this.transferModel.aggregate<CompanyEntityDto>([
+  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<Company[]> {
+    const companiesDto = await this.transferModel.aggregate<CompanyEntityDto>([
       {
         $match: {
           effectiveDate: {
@@ -102,7 +104,7 @@ export class TransferMongoRepository implements TransferRepository {
       },
     ]);
 
-    return companies;
+    return companiesDto.map(CompanyMapper.toDomain);
   }
 
   private async validateBeforeSave(transfer: TransferEntityDto) {

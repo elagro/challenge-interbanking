@@ -1,6 +1,7 @@
 import { GetTransfersUseCases } from 'src/modules/transfers/application/usecases/getTransfers.usecases';
 import { TransferRepository } from 'src/modules/transfers/domain/transfer.repository';
 import { TransferEntityDto } from 'src/modules/transfers/domain/transfer.entity';
+import { ObjectId } from 'src/shared/types/types';
 
 describe('GetTransfersUseCases', () => {
     let getTransfersUseCases: GetTransfersUseCases;
@@ -13,6 +14,8 @@ describe('GetTransfersUseCases', () => {
             findById: jest.fn(),
             findAll: jest.fn(),
             findByEffectiveDate: jest.fn(),
+            findUniqueCompaniesByEffectiveDate: jest.fn(),
+            findCompaniesWithTransfersInDateRange: jest.fn(),
         };
 
 
@@ -25,7 +28,7 @@ describe('GetTransfersUseCases', () => {
         const transfers: TransferEntityDto[] = [
             {
                 id: "1f4981ce-e36d-461b-a1c7-885a5545b903",
-                companyIdFrom: "5560e1ea-bbfe-4c2b-8e66-799ae3973b63",
+                companyIdFrom: new ObjectId("60d21b4667d0d8992e610c85"),
                 accountIdFrom: "ACC-001-2024-0001",
                 amount: 15000.5,
                 currency: "USD",
@@ -40,7 +43,7 @@ describe('GetTransfersUseCases', () => {
             },
             {
                 id: "89ae1a6d-9d03-42a0-97f4-2e1b9b889d6a",
-                companyIdFrom: "1",
+                companyIdFrom: new ObjectId("60d21b4667d0d8992e610c85"),
                 accountIdFrom: "ARG-001-2024-0001",
                 amount: 565.5,
                 currency: "ARS",

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { CompanyResponseDto } from './company.response.dto';
 import { GetCompanyUseCases } from '../../application/usecases/getCompany.usecases';
 import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
@@ -9,6 +9,8 @@ import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.us
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
 import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
 import { getObjectId } from 'src/shared/types/types';
+import { CompanyAlreadyExistsError } from '../../domain/errors/company-already-exists.error';
+import { Company } from '../../domain/company';
 
 
 @Controller('company')
@@ -124,14 +126,17 @@ export class CompanyController {
     try {
       const companyRequestDto = plainToInstance(CompanyRequestDto, companyRequestDtoPlain);
 
-      const companyDto = companyRequestDto.toCompanyDto();
-      const companyPersisted = await this.createCompanyUseCases.execute(companyDto)
+      const company = companyRequestDto.toCompany();
+      const companyPersisted = await this.createCompanyUseCases.execute(company)
 
       const companyResponseDto = CompanyResponseDto.toResponseDto(companyPersisted);
 
       const response = new ApiResponseSuccess(companyResponseDto);
       return response;
     } catch (error) {
+      if (error instanceof CompanyAlreadyExistsError) {
+        throw new ConflictException(error.message);
+      }
       const message = String(error.message);
       throw new BadRequestException(this.COMPANY_ERROR, {
         cause: new Error(),
