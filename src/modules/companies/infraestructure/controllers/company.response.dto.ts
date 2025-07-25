@@ -8,7 +8,7 @@ export class CompanyResponseDto {
   @Expose()
   name: string;
 
-  @Expose({ name: 'tax_id' })
+  @Expose({ name: 'taxId' })
   cuit: string;
 
   @Expose()

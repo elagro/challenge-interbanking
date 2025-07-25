@@ -8,8 +8,8 @@ export class CompanyRequestDto {
   @IsNotEmpty()
   name: string;
     
-  @Expose({ name: 'tax_id' })
-  @Transform(({ obj }) => obj.tax_id || obj.cuit) // Transforma tax_id a cuit
+  @Expose({ name: 'taxId' })
+  @Transform(({ obj }) => obj.taxId || obj.cuit) // Transforma taxId a cuit
   @IsString()
   @IsNotEmpty()
   cuit: string;
@@ -34,7 +34,7 @@ export class CompanyRequestDto {
 
   toCompany(): Company {
     return new Company(
-      null,
+      undefined,
       this.name,
       this.cuit,
       this.address,

@@ -1,6 +1,6 @@
 export class Company {
   constructor(
-    public readonly id: string,
+    public readonly id: string | undefined,
     public readonly name: string,
     public readonly cuit: string,
     public readonly address: string,

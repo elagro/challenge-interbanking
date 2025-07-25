@@ -47,7 +47,7 @@ export class TransferRequestDto {
 
   toTransfer(): Transfer {
     return new Transfer(
-      null,
+      undefined,
       new ObjectId(this.companyIdFrom),
       this.accountIdFrom,
       this.amount,

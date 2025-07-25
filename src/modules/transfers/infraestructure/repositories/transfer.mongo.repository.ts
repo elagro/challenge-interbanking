@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { TransferRepository } from "../../domain/transfer.repository";
 import { TransferDocument, TransferEntityDto } from "./dtos/transfer.dto";
-import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Company } from "src/modules/companies/domain/company";
@@ -17,7 +16,6 @@ export class TransferMongoRepository implements TransferRepository {
   constructor(
     @InjectModel(TransferEntityDto.name)
     private transferModel: Model<TransferDocument>,
-    private readonly getCompanyUseCases: GetCompanyUseCases,
   ) { }
 
   async save(transfer: Transfer): Promise<Transfer> {
@@ -103,20 +101,6 @@ export class TransferMongoRepository implements TransferRepository {
     ]);
 
     return companiesDto.map(CompanyMapper.toDomain);
-  }
-
-  private async validateBeforeSave(transfer: Transfer) {
-    const isValidAmount = transfer.amount > 0;
-
-    if (!isValidAmount) {
-      throw new Error('Invalid amount');
-    }
-
-    const isValidCompanyFrom = await this.getCompanyUseCases.execute(transfer.companyIdFrom);
-
-    if (!isValidCompanyFrom) {
-      throw new Error('Invalid company from');
-    }
   }
 
 }

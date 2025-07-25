@@ -7,7 +7,7 @@ import { CreateTransferUseCases } from '../application/usecases/createTransfer.u
 import { CompanyModule } from 'src/modules/companies/infraestructure/company.module';
 import { TransferMongoRepository } from './repositories/transfer.mongo.repository';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TransferEntityDto, TransferSchema } from '../domain/transfer.entity';
+import { TransferEntityDto, TransferSchema } from './repositories/dtos/transfer.dto';
 
 @Module({
   imports: [

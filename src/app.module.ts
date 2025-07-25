@@ -9,7 +9,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     ConfigModule.forRoot({
       load: [appConfig],
       isGlobal: true,
-      validationSchema: validationSchema
+      validationSchema: validationSchema,
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

@@ -2,7 +2,7 @@ import { ObjectId } from "src/shared/types/types";
 
 export class Transfer {
   constructor(
-    public readonly id: string,
+    public readonly id: string | undefined,
     public readonly companyIdFrom: ObjectId,
     public readonly accountIdFrom: string,
     public readonly amount: number,

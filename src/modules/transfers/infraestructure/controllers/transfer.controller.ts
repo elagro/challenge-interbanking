@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
 import { GetTransfersByEffectiveDateUseCases } from '../../application/usecases/getTransfersByEffectiveDate.usecases';
 import { GetTransfersUseCases } from '../../application/usecases/getTransfers.usecases';
@@ -6,47 +6,33 @@ import { TransferResponseDto } from './transfer.response.dto';
 import { TransferRequestDto } from './transfer.request.dto';
 import { plainToInstance } from 'class-transformer';
 import { CreateTransferUseCases } from '../../application/usecases/createTransfer.usecases';
+import { Transfer } from '../../domain/transfer';
 
 
-@Controller('transfer')
+@Controller('transfers')
 export class TransferController {
   private readonly TRANSFER_ERROR = 'TRANSFER_ERROR';
 
   constructor(
     private readonly getTransfersUseCases: GetTransfersUseCases,
-    private readonly getTransfersByRegistrationDateUseCases: GetTransfersByEffectiveDateUseCases,
+    private readonly getTransfersByEffectiveDateUseCases: GetTransfersByEffectiveDateUseCases,
     private readonly createTransferUseCases: CreateTransferUseCases,
   ) { }
 
   @Get()
-  async getTransfers(): Promise<BaseApiResponse<TransferResponseDto[]>> {
+  async getTransfers(
+    @Query('effectiveFrom') effectiveFrom?: string,
+    @Query('effectiveTo') effectiveTo?: string,
+  ): Promise<BaseApiResponse<TransferResponseDto[]>> {
     try {
-      const transfers = await this.getTransfersUseCases.execute();
-      const transferResponseDtos = TransferResponseDto.toResponseDtos(transfers);
+      let transfers: Transfer[] | null;
 
-      const response = new ApiResponseSuccess(transferResponseDtos);
-      return response
+      if (effectiveFrom && effectiveTo) {
+        transfers = await this.getTransfersByEffectiveDateUseCases.execute(new Date(effectiveFrom), new Date(effectiveTo));
+      } else {
+        transfers = await this.getTransfersUseCases.execute();
+      }
 
-    } catch (error) {
-      const message = String(error.message);
-      throw new BadRequestException(this.TRANSFER_ERROR, {
-        cause: new Error(),
-        description: message,
-      });
-    }
-  }
-
-  /**
-   * Obtener las empresas que se adhirieron en el último mes.
-   */
-  @Get('/madeLastMonth')
-  async getTransfersMadeLastMonth(): Promise<BaseApiResponse<TransferResponseDto[]>> {
-    try {
-      const fromDate = new Date();
-      fromDate.setMonth(fromDate.getMonth() - 1);
-      const toDate = new Date();
-
-      const transfers = await this.getTransfersByRegistrationDateUseCases.execute(fromDate, toDate);
       const transferResponseDtos = TransferResponseDto.toResponseDtos(transfers);
 
       const response = new ApiResponseSuccess(transferResponseDtos);
@@ -62,7 +48,7 @@ export class TransferController {
   }
 
   @Post()
-  async postTransfer(@Body() transferRequestDtoPlain: TransferRequestDto): Promise<BaseApiResponse<TransferResponseDto>> {
+  async createTransfer(@Body() transferRequestDtoPlain: TransferRequestDto): Promise<BaseApiResponse<TransferResponseDto>> {
     try {
       const transferRequestDto = plainToInstance(TransferRequestDto, transferRequestDtoPlain);
 
