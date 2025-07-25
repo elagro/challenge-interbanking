@@ -66,8 +66,8 @@ export class TransferController {
     try {
       const transferRequestDto = plainToInstance(TransferRequestDto, transferRequestDtoPlain);
 
-      const transferDto = transferRequestDto.toTransferDto();
-      const transferPersisted = await this.createTransferUseCases.execute(transferDto)
+      const transfer = transferRequestDto.toTransfer();
+      const transferPersisted = await this.createTransferUseCases.execute(transfer)
 
       const transferResponseDto = TransferResponseDto.toResponseDto(transferPersisted);
 

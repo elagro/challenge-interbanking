@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { TransferRepository } from "../../domain/transfer.repository";
-import { TransferDocument, TransferEntityDto } from "../../domain/transfer.entity";
+import { TransferDocument, TransferEntityDto } from "./dtos/transfer.dto";
 import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -8,6 +8,8 @@ import { Company } from "src/modules/companies/domain/company";
 import { ObjectId } from "src/shared/types/types";
 import { CompanyMapper } from "src/modules/companies/infraestructure/repositories/mappers/company.mapper";
 import { CompanyEntityDto } from "src/modules/companies/infraestructure/repositories/dtos/company.dto";
+import { Transfer } from "../../domain/transfer";
+import { TransferMapper } from "./mappers/transfer.mapper";
 
 @Injectable()
 export class TransferMongoRepository implements TransferRepository {
@@ -18,30 +20,25 @@ export class TransferMongoRepository implements TransferRepository {
     private readonly getCompanyUseCases: GetCompanyUseCases,
   ) { }
 
-  async save(transfer: TransferEntityDto): Promise<TransferEntityDto> {
-
-    await this.validateBeforeSave(transfer);
-
-    const newTransfer = new this.transferModel(transfer);
-    return newTransfer.save();
+  async save(transfer: Transfer): Promise<Transfer> {
+    const transferDto = TransferMapper.toPersistence(transfer);
+    const newTransfer = new this.transferModel(transferDto);
+    const savedTransfer = await newTransfer.save();
+    return TransferMapper.toDomain(savedTransfer);
   }
 
-  async findById(id: string): Promise<TransferEntityDto | null> {
+  async findById(id: string): Promise<Transfer | null> {
     const transfer = await this.transferModel.findById(id).exec();
-
-    if (!transfer) {
-      return null;
-    }
-
-    return transfer;
+    return transfer ? TransferMapper.toDomain(transfer) : null;
   }
 
-  async findAll(): Promise<TransferEntityDto[] | null> {
-    return this.transferModel.find().exec();
+  async findAll(): Promise<Transfer[] | null> {
+    const transfers = await this.transferModel.find().exec();
+    return transfers.map(TransferMapper.toDomain);
   }
 
-  async findByEffectiveDate(from: Date, to: Date): Promise<TransferEntityDto[] | null> {
-    return this.transferModel
+  async findByEffectiveDate(from: Date, to: Date): Promise<Transfer[] | null> {
+    const transfers = await this.transferModel
       .find({
         effectiveDate: {
           $gte: from,
@@ -49,6 +46,7 @@ export class TransferMongoRepository implements TransferRepository {
         },
       })
       .exec();
+    return transfers.map(TransferMapper.toDomain);
   }
 
   async findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null> {
@@ -107,7 +105,7 @@ export class TransferMongoRepository implements TransferRepository {
     return companiesDto.map(CompanyMapper.toDomain);
   }
 
-  private async validateBeforeSave(transfer: TransferEntityDto) {
+  private async validateBeforeSave(transfer: Transfer) {
     const isValidAmount = transfer.amount > 0;
 
     if (!isValidAmount) {

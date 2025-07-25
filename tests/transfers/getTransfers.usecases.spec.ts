@@ -1,6 +1,6 @@
 import { GetTransfersUseCases } from 'src/modules/transfers/application/usecases/getTransfers.usecases';
 import { TransferRepository } from 'src/modules/transfers/domain/transfer.repository';
-import { TransferEntityDto } from 'src/modules/transfers/domain/transfer.entity';
+import { Transfer } from 'src/modules/transfers/domain/transfer';
 import { ObjectId } from 'src/shared/types/types';
 
 describe('GetTransfersUseCases', () => {
@@ -25,37 +25,33 @@ describe('GetTransfersUseCases', () => {
 
     it('debería devolver una lista de transferencias', async () => {
         //Transferencias simuladas
-        const transfers: TransferEntityDto[] = [
-            {
-                id: "1f4981ce-e36d-461b-a1c7-885a5545b903",
-                companyIdFrom: new ObjectId("60d21b4667d0d8992e610c85"),
-                accountIdFrom: "ACC-001-2024-0001",
-                amount: 15000.5,
-                currency: "USD",
-                companyIdTo: "550e8400-e29b-41d4-a716-446655440002",
-                accountIdTo: "ACC-002-2024-0005",
-                concept: "Payment for services rendered",
-                reference: "INV-2024-001234",
-                controlNumber: "TXN-240522-001",
-                effectiveDate: new Date("2025-05-22T14:30:00.000Z"),
-                createdAt: new Date("2025-05-25T02:45:07.557Z"),
-                createdBy: "Myself",
-            },
-            {
-                id: "89ae1a6d-9d03-42a0-97f4-2e1b9b889d6a",
-                companyIdFrom: new ObjectId("60d21b4667d0d8992e610c85"),
-                accountIdFrom: "ARG-001-2024-0001",
-                amount: 565.5,
-                currency: "ARS",
-                companyIdTo: "2",
-                accountIdTo: "ARG-002-2024-0005",
-                concept: "Pago de servcios",
-                reference: "2025-321654",
-                controlNumber: "557522-001",
-                effectiveDate: new Date("2025-05-23T10:00:00.000Z"),
-                createdAt: new Date("2025-05-25T08:27:03.056Z"),
-                createdBy: "Myself",
-            },
+        const transfers: Transfer[] = [
+            new Transfer(
+                "1f4981ce-e36d-461b-a1c7-885a5545b903",
+                new ObjectId("60d21b4667d0d8992e610c85"),
+                "ACC-001-2024-0001",
+                15000.5,
+                "USD",
+                "550e8400-e29b-41d4-a716-446655440002",
+                "ACC-002-2024-0005",
+                "Payment for services rendered",
+                "INV-2024-001234",
+                "TXN-240522-001",
+                new Date("2025-05-22T14:30:00.000Z"),
+            ),
+            new Transfer(
+                "89ae1a6d-9d03-42a0-97f4-2e1b9b889d6a",
+                new ObjectId("60d21b4667d0d8992e610c85"),
+                "ARG-001-2024-0001",
+                565.5,
+                "ARS",
+                "2",
+                "ARG-002-2024-0005",
+                "Pago de servcios",
+                "2025-321654",
+                "557522-001",
+                new Date("2025-05-23T10:00:00.000Z"),
+            ),
         ];
 
         //Configuramos el mock para devolverlas

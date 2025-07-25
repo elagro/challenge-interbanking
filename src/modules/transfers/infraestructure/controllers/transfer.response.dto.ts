@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { TransferEntityDto } from "../../domain/transfer.entity";
+import { Transfer } from "../../domain/transfer";
 
 
 export class TransferResponseDto {
@@ -36,34 +36,34 @@ export class TransferResponseDto {
   @Expose()
   effectiveDate: Date;
 
-  static toResponseDto(transferDto: TransferEntityDto | null): TransferResponseDto {
-    const transfer = new TransferResponseDto();
+  static toResponseDto(transfer: Transfer | null): TransferResponseDto {
+    const transferResponse = new TransferResponseDto();
     
-    if (!transferDto) {
-      return transfer;
+    if (!transfer) {
+      return transferResponse;
     }
 
-    transfer.id = transferDto.id || transferDto._id?.toString();
-    transfer.companyIdFrom = transferDto.companyIdFrom.toHexString();
-    transfer.accountIdFrom = transferDto.accountIdFrom;
-    transfer.amount = transferDto.amount;
-    transfer.currency = transferDto.currency;
-    transfer.companyIdTo = transferDto.companyIdTo;
-    transfer.accountIdTo = transferDto.accountIdTo;
-    transfer.concept = transferDto.concept;
-    transfer.reference = transferDto.reference;
-    transfer.controlNumber = transferDto.controlNumber;
-    transfer.effectiveDate = transferDto.effectiveDate;
+    transferResponse.id = transfer.id;
+    transferResponse.companyIdFrom = transfer.companyIdFrom.toHexString();
+    transferResponse.accountIdFrom = transfer.accountIdFrom;
+    transferResponse.amount = transfer.amount;
+    transferResponse.currency = transfer.currency;
+    transferResponse.companyIdTo = transfer.companyIdTo;
+    transferResponse.accountIdTo = transfer.accountIdTo;
+    transferResponse.concept = transfer.concept;
+    transferResponse.reference = transfer.reference;
+    transferResponse.controlNumber = transfer.controlNumber;
+    transferResponse.effectiveDate = transfer.effectiveDate;
 
-    return transfer;
+    return transferResponse;
   }
 
-  static toResponseDtos(transferDtos: TransferEntityDto[] | null): TransferResponseDto[] {
-    if (!transferDtos || transferDtos.length === 0) {
+  static toResponseDtos(transfers: Transfer[] | null): TransferResponseDto[] {
+    if (!transfers || transfers.length === 0) {
       return [];
     }
 
-    const transferResponseDtos = transferDtos.map((x) => TransferResponseDto.toResponseDto(x));
+    const transferResponseDtos = transfers.map((x) => TransferResponseDto.toResponseDto(x));
 
     return transferResponseDtos;
   }

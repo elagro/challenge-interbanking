@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNotEmpty, IsString } from "class-validator";
-import { TransferEntityDto } from "../../domain/transfer.entity";
+import { Transfer } from "../../domain/transfer";
 import { ObjectId } from "src/shared/types/types";
 
 export class TransferRequestDto {
@@ -45,18 +45,19 @@ export class TransferRequestDto {
   @IsNotEmpty()
   effectiveDate: Date;
 
-  toTransferDto(): TransferEntityDto {
-    return {
-      companyIdFrom: new ObjectId(this.companyIdFrom),
-      accountIdFrom: this.accountIdFrom,
-      amount: this.amount,
-      currency: this.currency,
-      companyIdTo: this.companyIdTo,
-      accountIdTo: this.accountIdTo,
-      concept: this.concept,
-      reference: this.reference,
-      controlNumber: this.controlNumber,
-      effectiveDate: this.effectiveDate
-    };
+  toTransfer(): Transfer {
+    return new Transfer(
+      null,
+      new ObjectId(this.companyIdFrom),
+      this.accountIdFrom,
+      this.amount,
+      this.currency,
+      this.companyIdTo,
+      this.accountIdTo,
+      this.concept,
+      this.reference,
+      this.controlNumber,
+      this.effectiveDate
+    );
   }
 }
