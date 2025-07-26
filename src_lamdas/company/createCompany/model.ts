@@ -52,7 +52,7 @@ export class CompanyRequest {
   validate(): string[] {
     const errors = validateSync(this);
     if (errors.length > 0) {
-      return errors.map(err => Object.values(err.constraints)).flat();
+      return errors.map(err => err.constraints ? Object.values(err.constraints) : []).flat();
     }
     return [];
   }

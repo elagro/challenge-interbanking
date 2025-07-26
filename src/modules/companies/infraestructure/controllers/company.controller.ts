@@ -7,7 +7,6 @@ import { CreateCompanyUseCases } from '../../application/usecases/createCompany.
 import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
-import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
 import { getObjectId } from 'src/shared/types/types';
 import { CompanyAlreadyExistsError } from '../../domain/errors/company-already-exists.error';
 import { Company } from '../../domain/company';
