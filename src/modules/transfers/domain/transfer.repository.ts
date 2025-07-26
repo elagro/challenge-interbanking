@@ -8,7 +8,7 @@ export interface TransferRepository {
   findAll(): Promise<Transfer[] | null>;
   findByEffectiveDate(from: Date, to: Date): Promise<Transfer[] | null>;
   findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null>;
-  findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<Company[]>;
+  findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<string[]>;
 }
 
 export const TRANSFER_REPOSITORY = Symbol('TRANSFER_REPOSITORY');

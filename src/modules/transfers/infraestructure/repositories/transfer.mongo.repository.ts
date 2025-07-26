@@ -67,8 +67,8 @@ export class TransferMongoRepository implements TransferRepository {
       .exec();
   }
 
-  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<Company[]> {
-    const companiesDto = await this.transferModel.aggregate<CompanyEntityDto>([
+  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<string[]> {
+    const result = await this.transferModel.aggregate<{ _id: string }>([
       {
         $match: {
           effectiveDate: {
@@ -83,24 +83,14 @@ export class TransferMongoRepository implements TransferRepository {
         },
       },
       {
-        $lookup: {
-          from: 'companies',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'company',
-        },
-      },
-      {
-        $unwind: '$company',
-      },
-      {
-        $replaceRoot: {
-          newRoot: '$company',
+        $project: {
+          _id: 0,
+          companyId: '$_id',
         },
       },
     ]);
 
-    return companiesDto.map(CompanyMapper.toDomain);
+    return result.map(item => item.companyId);
   }
 
 }
