@@ -1,4 +1,4 @@
-import { allHaveValues } from "src_lamdas/shared/compare";
+import { IsString, IsEmail, IsDate, validateSync } from 'class-validator';
 
 export class CompanyEntity {
   id?: string;
@@ -8,40 +8,52 @@ export class CompanyEntity {
   phone: string;
   email: string;
   registrationDate: Date;
-
 }
 
-
 export class CompanyRequest {
-  name: string;
-  cuit: string;
-  address: string;
-  phone: string;
-  email: string;
-  registrationDate: Date;
+  @IsString()
+  name?: string;
 
-  constructor(request: CompanyRequest) {
+  @IsString()
+  cuit?: string;
+
+  @IsString()
+  address?: string;
+
+  @IsString()
+  phone?: string;
+
+  @IsEmail()
+  email?: string;
+
+  @IsDate()
+  registrationDate?: Date;
+
+  constructor(request: Partial<CompanyRequest>) {
     this.name = request.name;
     this.cuit = request.cuit;
     this.address = request.address;
     this.phone = request.phone;
     this.email = request.email;
-    this.registrationDate = request.registrationDate;
+    this.registrationDate = request.registrationDate ? new Date(request.registrationDate) : undefined;
   }
 
   toEntity(): CompanyEntity {
     const companyEntity = new CompanyEntity();
-    companyEntity.name = this.name;
-    companyEntity.cuit = this.cuit;
-    companyEntity.address = this.address;
-    companyEntity.phone = this.phone;
-    companyEntity.email = this.email;
-    companyEntity.registrationDate = new Date(this.registrationDate);
-
+    companyEntity.name = this.name!;
+    companyEntity.cuit = this.cuit!;
+    companyEntity.address = this.address!;
+    companyEntity.phone = this.phone!;
+    companyEntity.email = this.email!;
+    companyEntity.registrationDate = this.registrationDate!;
     return companyEntity;
   }
 
-  validate() {
-    return allHaveValues(this.name, this.cuit, this.address, this.phone, this.email, this.registrationDate)
+  validate(): string[] {
+    const errors = validateSync(this);
+    if (errors.length > 0) {
+      return errors.map(err => err.constraints ? Object.values(err.constraints) : []).flat();
+    }
+    return [];
   }
 }

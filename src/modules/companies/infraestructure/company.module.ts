@@ -8,7 +8,7 @@ import { GetCompaniesByRegistrationDateUseCases } from '../application/usecases/
 import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
 import { TransferModule } from 'src/modules/transfers/infraestructure/transfer.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CompanyEntityDto, CompanySchema } from '../domain/company.entity';
+import { CompanyEntityDto, CompanySchema } from './repositories/dtos/company.dto';
 import { CompanyMongoRepository } from './repositories/company.mongo.repository';
 
 @Module({

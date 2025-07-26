@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, ConflictException, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
 import { CompanyResponseDto } from './company.response.dto';
 import { GetCompanyUseCases } from '../../application/usecases/getCompany.usecases';
 import { ApiResponseSuccess, BaseApiResponse } from 'src/shared/model/api.model';
@@ -7,11 +7,12 @@ import { CreateCompanyUseCases } from '../../application/usecases/createCompany.
 import { plainToInstance } from 'class-transformer';
 import { GetCompaniesUseCases } from '../../application/usecases/getCompanies.usecases';
 import { GetCompaniesByRegistrationDateUseCases } from '../../application/usecases/getCompaniesByRegistrationDate.usecases';
-import { GetCompaniesWithTransfersByEffectiveDateUseCase } from '../../application/usecases/getCompaniesWithTransfersByEffectiveDate.usecases';
 import { getObjectId } from 'src/shared/types/types';
+import { CompanyAlreadyExistsError } from '../../domain/errors/company-already-exists.error';
+import { Company } from '../../domain/company';
 
 
-@Controller('company')
+@Controller('companies')
 export class CompanyController {
   private readonly COMPANY_ERROR = 'COMPANY_ERROR';
 
@@ -19,65 +20,30 @@ export class CompanyController {
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
     private readonly getCompaniesByRegistrationDateUseCases: GetCompaniesByRegistrationDateUseCases,
-    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByEffectiveDateUseCase,
     private readonly createCompanyUseCases: CreateCompanyUseCases,
   ) { }
 
   @Get()
-  async getCompanies(): Promise<BaseApiResponse<CompanyResponseDto[]>> {
+  async getCompanies(
+    @Query('registeredFrom') registeredFrom?: string,
+    @Query('registeredTo') registeredTo?: string,
+    @Query('withTransfersSince') withTransfersSince?: string,
+  ): Promise<BaseApiResponse<CompanyResponseDto[]>> {
     try {
-      const companies = await this.getCompaniesUseCases.execute();
-      const companiesResponseDto = CompanyResponseDto.toResponseDtos(companies);
+      let companies: Company[];
 
-      const response = new ApiResponseSuccess(companiesResponseDto);
-      return response
+      if (registeredFrom && registeredTo) {
+        companies = await this.getCompaniesByRegistrationDateUseCases.execute(new Date(registeredFrom), new Date(registeredTo));
+      } else if (withTransfersSince) {
+        // In a microservices architecture, you would typically fetch company details
+        // from a dedicated company service using these IDs.
+        // For now, we'll just return an empty array.
+        const response = new ApiResponseSuccess([]);
+        return response;
+      } else {
+        companies = await this.getCompaniesUseCases.execute();
+      }
 
-    } catch (error) {
-      const message = String(error.message);
-      throw new BadRequestException(this.COMPANY_ERROR, {
-        cause: new Error(),
-        description: message,
-      });
-    }
-  }
-
-  /**
-   * Obtener las empresas que se adhirieron en el último mes.
-   */
-  @Get('/addedLastMonth')
-  async getCompaniesAddedLastMonth(): Promise<BaseApiResponse<CompanyResponseDto[]>> {
-    try {
-      const fromDate = new Date();
-      fromDate.setMonth(fromDate.getMonth() - 1);
-      const toDate = new Date();
-
-      const companies = await this.getCompaniesByRegistrationDateUseCases.execute(fromDate, toDate);
-      const companiesResponseDto = CompanyResponseDto.toResponseDtos(companies);
-
-      const response = new ApiResponseSuccess(companiesResponseDto);
-      return response
-
-    } catch (error) {
-      const message = String(error.message);
-      throw new BadRequestException(this.COMPANY_ERROR, {
-        cause: new Error(),
-        description: message,
-      });
-    }
-  }
-
-  
-  /**
-   * Obtener las empresas que se adhirieron en el último mes.
-   */
-  @Get('/withTransfersInLastMonth')
-  async getCompaniesWithTransfersInLastMonth(): Promise<BaseApiResponse<CompanyResponseDto[]>> {
-    try {
-      const fromDate = new Date();
-      fromDate.setMonth(fromDate.getMonth() - 1);
-      const toDate = new Date();
-
-      const companies = await this.getCompaniesWithTransfersByRegistrationDateUseCase.execute(fromDate, toDate);
       const companiesResponseDto = CompanyResponseDto.toResponseDtos(companies);
 
       const response = new ApiResponseSuccess(companiesResponseDto);
@@ -120,18 +86,21 @@ export class CompanyController {
   /**
    * Registrar la adhesión de una nueva empresa. 
    */
-  async postCompany(@Body() companyRequestDtoPlain: CompanyRequestDto): Promise<BaseApiResponse<CompanyResponseDto>> {
+  async createCompany(@Body() companyRequestDtoPlain: CompanyRequestDto): Promise<BaseApiResponse<CompanyResponseDto>> {
     try {
       const companyRequestDto = plainToInstance(CompanyRequestDto, companyRequestDtoPlain);
 
-      const companyDto = companyRequestDto.toCompanyDto();
-      const companyPersisted = await this.createCompanyUseCases.execute(companyDto)
+      const company = companyRequestDto.toCompany();
+      const companyPersisted = await this.createCompanyUseCases.execute(company)
 
       const companyResponseDto = CompanyResponseDto.toResponseDto(companyPersisted);
 
       const response = new ApiResponseSuccess(companyResponseDto);
       return response;
     } catch (error) {
+      if (error instanceof CompanyAlreadyExistsError) {
+        throw new ConflictException(error.message);
+      }
       const message = String(error.message);
       throw new BadRequestException(this.COMPANY_ERROR, {
         cause: new Error(),

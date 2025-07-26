@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CompanyEntityDto } from "../../domain/company.entity";
+import { Company } from "../../domain/company";
 import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repository";
 import { ObjectId } from "src/shared/types/types";
 
@@ -10,7 +10,7 @@ export class GetCompanyUseCases {
         private readonly companyRepository: CompanyRepository,
     ) { }
 
-    async execute(id: ObjectId): Promise<CompanyEntityDto | null> {
+    async execute(id: ObjectId): Promise<Company | null> {
         const company = await this.companyRepository.findById(id);
         
         return company;

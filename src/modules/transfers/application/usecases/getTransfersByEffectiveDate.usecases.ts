@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { TransferEntityDto } from "../../domain/transfer.entity";
 import { TRANSFER_REPOSITORY, TransferRepository } from "../../domain/transfer.repository";
+import { Transfer } from "../../domain/transfer";
 
 
 @Injectable()
@@ -10,7 +10,7 @@ export class GetTransfersByEffectiveDateUseCases {
         private readonly transferRepository: TransferRepository,
     ) { }
 
-    async execute(from: Date, to: Date): Promise<TransferEntityDto[]> {
+    async execute(from: Date, to: Date): Promise<Transfer[]> {
         const transfers = await this.transferRepository.findByEffectiveDate(from, to);
 
         if (!transfers) {

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { TRANSFER_REPOSITORY, TransferRepository } from "../../domain/transfer.repository";
-import { TransferEntityDto } from "../../domain/transfer.entity";
+import { Transfer } from "../../domain/transfer";
 
 @Injectable()
 export class CreateTransferUseCases {
@@ -9,7 +9,7 @@ export class CreateTransferUseCases {
         private readonly transferRepository: TransferRepository,
     ) { }
 
-    async execute(transferDto: TransferEntityDto): Promise<TransferEntityDto> {
-        return this.transferRepository.save(transferDto);
+    async execute(transfer: Transfer): Promise<Transfer> {
+        return this.transferRepository.save(transfer);
     }
 }

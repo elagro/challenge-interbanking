@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { TransferRepository } from "../../domain/transfer.repository";
-import { TransferDocument, TransferEntityDto } from "../../domain/transfer.entity";
-import { GetCompanyUseCases } from "src/modules/companies/application/usecases/getCompany.usecases";
+import { TransferDocument, TransferEntityDto } from "./dtos/transfer.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
 import { ObjectId } from "src/shared/types/types";
+import { Transfer } from "../../domain/transfer";
+import { TransferMapper } from "./mappers/transfer.mapper";
 
 @Injectable()
 export class TransferMongoRepository implements TransferRepository {
@@ -13,33 +13,27 @@ export class TransferMongoRepository implements TransferRepository {
   constructor(
     @InjectModel(TransferEntityDto.name)
     private transferModel: Model<TransferDocument>,
-    private readonly getCompanyUseCases: GetCompanyUseCases,
   ) { }
 
-  async save(transfer: TransferEntityDto): Promise<TransferEntityDto> {
-
-    await this.validateBeforeSave(transfer);
-
-    const newTransfer = new this.transferModel(transfer);
-    return newTransfer.save();
+  async save(transfer: Transfer): Promise<Transfer> {
+    const transferDto = TransferMapper.toPersistence(transfer);
+    const newTransfer = new this.transferModel(transferDto);
+    const savedTransfer = await newTransfer.save();
+    return TransferMapper.toDomain(savedTransfer);
   }
 
-  async findById(id: string): Promise<TransferEntityDto | null> {
+  async findById(id: string): Promise<Transfer | null> {
     const transfer = await this.transferModel.findById(id).exec();
-
-    if (!transfer) {
-      return null;
-    }
-
-    return transfer;
+    return transfer ? TransferMapper.toDomain(transfer) : null;
   }
 
-  async findAll(): Promise<TransferEntityDto[] | null> {
-    return this.transferModel.find().exec();
+  async findAll(): Promise<Transfer[] | null> {
+    const transfers = await this.transferModel.find().exec();
+    return transfers.map(TransferMapper.toDomain);
   }
 
-  async findByEffectiveDate(from: Date, to: Date): Promise<TransferEntityDto[] | null> {
-    return this.transferModel
+  async findByEffectiveDate(from: Date, to: Date): Promise<Transfer[] | null> {
+    const transfers = await this.transferModel
       .find({
         effectiveDate: {
           $gte: from,
@@ -47,6 +41,7 @@ export class TransferMongoRepository implements TransferRepository {
         },
       })
       .exec();
+    return transfers.map(TransferMapper.toDomain);
   }
 
   async findUniqueCompaniesByEffectiveDate(from: Date, to: Date): Promise<ObjectId[] | null> {
@@ -69,8 +64,8 @@ export class TransferMongoRepository implements TransferRepository {
       .exec();
   }
 
-  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<CompanyEntityDto[]> {
-    const companies = await this.transferModel.aggregate<CompanyEntityDto>([
+  async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<string[]> {
+    const result = await this.transferModel.aggregate<{ _id: string }>([
       {
         $match: {
           effectiveDate: {
@@ -85,38 +80,14 @@ export class TransferMongoRepository implements TransferRepository {
         },
       },
       {
-        $lookup: {
-          from: 'companies',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'company',
-        },
-      },
-      {
-        $unwind: '$company',
-      },
-      {
-        $replaceRoot: {
-          newRoot: '$company',
+        $project: {
+          _id: 0,
+          companyId: '$_id',
         },
       },
     ]);
 
-    return companies;
-  }
-
-  private async validateBeforeSave(transfer: TransferEntityDto) {
-    const isValidAmount = transfer.amount > 0;
-
-    if (!isValidAmount) {
-      throw new Error('Invalid amount');
-    }
-
-    const isValidCompanyFrom = await this.getCompanyUseCases.execute(transfer.companyIdFrom);
-
-    if (!isValidCompanyFrom) {
-      throw new Error('Invalid company from');
-    }
+    return result.map(item => item._id);
   }
 
 }

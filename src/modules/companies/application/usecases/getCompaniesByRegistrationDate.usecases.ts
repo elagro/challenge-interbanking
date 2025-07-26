@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { CompanyEntityDto } from "../../domain/company.entity";
+import { Company } from "../../domain/company";
 import { COMPANY_REPOSITORY, CompanyRepository } from "../../domain/company.repository";
 
 @Injectable()
@@ -9,7 +9,7 @@ export class GetCompaniesByRegistrationDateUseCases {
         private readonly companyRepository: CompanyRepository,
     ) { }
 
-    async execute(from: Date, to: Date): Promise<CompanyEntityDto[]> {
+    async execute(from: Date, to: Date): Promise<Company[]> {
         const companies = await this.companyRepository.findByRegistrationDate(from, to);
 
         if (!companies) {

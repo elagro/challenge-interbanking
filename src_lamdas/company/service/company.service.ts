@@ -1,14 +1,18 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, PutCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { randomUUID } from "node:crypto";
 import { CompanyEntity } from "../createCompany/model";
 
 export class CompanyService {
     private readonly TABLE_NAME = 'Companies';
-    private readonly client = new DynamoDBClient({});
-    private readonly ddbDocClient = DynamoDBDocumentClient.from(this.client);
+    private readonly ddbDocClient: DynamoDBDocumentClient;
 
-    async save(companyEntity: CompanyEntity) {
+    constructor() {
+        const client = new DynamoDBClient({});
+        this.ddbDocClient = DynamoDBDocumentClient.from(client);
+    }
+
+    async save(companyEntity: CompanyEntity): Promise<CompanyEntity> {
         companyEntity.id = randomUUID();
 
         const command = new PutCommand({
@@ -17,21 +21,16 @@ export class CompanyService {
         });
 
         await this.ddbDocClient.send(command);
+        return companyEntity;
     }
 
-    async existCompany(companyEntity: CompanyEntity) {
-        const cuit = companyEntity.cuit;
-
-        const command = new QueryCommand({
+    async companyExists(cuit: string): Promise<boolean> {
+        const command = new GetCommand({
             TableName: this.TABLE_NAME,
-            KeyConditionExpression: 'cuit = :cuit',
-            ExpressionAttributeValues: { ':cuit': cuit },
-            Select: 'COUNT'
+            Key: { cuit }
         });
 
         const result = await this.ddbDocClient.send(command);
-        
-        return !result.Count ? false : result.Count > 0;
+        return !!result.Item;
     }
-
 }

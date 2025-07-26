@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { CompanyEntityDto } from "../../domain/company.entity";
+import { Company } from "../../domain/company";
 
 export class CompanyResponseDto {
   @Expose()
@@ -8,7 +8,7 @@ export class CompanyResponseDto {
   @Expose()
   name: string;
 
-  @Expose({ name: 'tax_id' })
+  @Expose({ name: 'taxId' })
   cuit: string;
 
   @Expose()
@@ -23,29 +23,29 @@ export class CompanyResponseDto {
   @Expose()
   registrationDate: Date;
 
-  static toResponseDto(companyDto: CompanyEntityDto | null): CompanyResponseDto {
-    const company = new CompanyResponseDto();
+  static toResponseDto(company: Company | null): CompanyResponseDto {
+    const companyResponse = new CompanyResponseDto();
 
-    if (!companyDto) {
-      return company;
+    if (!company) {
+      return companyResponse;
     }
 
-    company.id = companyDto.id || companyDto._id?.toString();
-    company.name = companyDto.name;
-    company.cuit = companyDto.cuit;
-    company.address = companyDto.address;
-    company.phone = companyDto.phone;
-    company.email = companyDto.email;
-    company.registrationDate = companyDto.registrationDate;
+    companyResponse.id = company.id;
+    companyResponse.name = company.name;
+    companyResponse.cuit = company.cuit;
+    companyResponse.address = company.address;
+    companyResponse.phone = company.phone;
+    companyResponse.email = company.email;
+    companyResponse.registrationDate = company.registrationDate;
 
-    return company;
+    return companyResponse;
   }
 
-  static toResponseDtos(companyDtos: CompanyEntityDto[] | null): CompanyResponseDto[] {
-    if (!companyDtos || companyDtos.length === 0) {
+  static toResponseDtos(companies: Company[] | null): CompanyResponseDto[] {
+    if (!companies || companies.length === 0) {
       return [];
     }
-    const companyResponseDtos = companyDtos.map((x) => CompanyResponseDto.toResponseDto(x));
+    const companyResponseDtos = companies.map((x) => CompanyResponseDto.toResponseDto(x));
 
     return companyResponseDtos;
   }

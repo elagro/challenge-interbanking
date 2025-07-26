@@ -1,34 +1,30 @@
 import { GetCompaniesUseCases } from "src/modules/companies/application/usecases/getCompanies.usecases";
 import { CompanyRepository } from "src/modules/companies/domain/company.repository";
-import { CompanyEntityDto } from "src/modules/companies/domain/company.entity";
+import { Company } from "src/modules/companies/domain/company";
 
 describe('GetCompaniesUseCases', () => {
     let getCompaniesUseCases: GetCompaniesUseCases;
     let companyRepository: jest.Mocked<CompanyRepository>;
 
-    const mockCompanies: CompanyEntityDto[] = [
-        {
-            id: '1',
-            name: 'Empresa Uno',
-            cuit: '20-12345678-9',
-            address: 'Calle Falsa 123',
-            phone: '1234567890',
-            email: 'uno@empresa.com',
-            registrationDate: new Date('2022-01-01'),
-            createdAt: new Date('2022-01-01'),
-            createdBy: 'Admin',
-        },
-        {
-            id: '2',
-            name: 'Empresa Dos',
-            cuit: '23-98765432-1',
-            address: 'Avenida Siempre Viva 742',
-            phone: '0987654321',
-            email: 'dos@empresa.com',
-            registrationDate: new Date('2023-03-01'),
-            createdAt: new Date('2023-03-01'),
-            createdBy: 'Admin',
-        },
+    const mockCompanies: Company[] = [
+        new Company(
+            '1',
+            'Empresa Uno',
+            '20-12345678-9',
+            'Calle Falsa 123',
+            '1234567890',
+            'uno@empresa.com',
+            new Date('2022-01-01'),
+        ),
+        new Company(
+            '2',
+            'Empresa Dos',
+            '23-98765432-1',
+            'Avenida Siempre Viva 742',
+            '0987654321',
+            'dos@empresa.com',
+            new Date('2023-03-01'),
+        ),
     ];
 
     beforeEach(() => {
@@ -37,6 +33,8 @@ describe('GetCompaniesUseCases', () => {
             findById: jest.fn(),
             findAll: jest.fn(),
             findByRegistrationDate: jest.fn(),
+            findByCuit: jest.fn(),
+            findByIds: jest.fn(),
         };
 
         getCompaniesUseCases = new GetCompaniesUseCases(companyRepository);

@@ -1,6 +1,6 @@
 import { Expose, Transform, Type } from "class-transformer";
-import { CompanyEntityDto } from "../../domain/company.entity";
 import { IsDate, IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { Company } from "../../domain/company";
 
 export class CompanyRequestDto {
     
@@ -8,8 +8,8 @@ export class CompanyRequestDto {
   @IsNotEmpty()
   name: string;
     
-  @Expose({ name: 'tax_id' })
-  @Transform(({ obj }) => obj.tax_id || obj.cuit) // Transforma tax_id a cuit
+  @Expose({ name: 'taxId' })
+  @Transform(({ obj }) => obj.taxId || obj.cuit) // Transforma taxId a cuit
   @IsString()
   @IsNotEmpty()
   cuit: string;
@@ -32,14 +32,15 @@ export class CompanyRequestDto {
   @IsNotEmpty()
   registrationDate: Date;
 
-  toCompanyDto(): CompanyEntityDto {
-    return {
-      name: this.name,
-      cuit: this.cuit,
-      address: this.address,
-      phone: this.phone,
-      email: this.email,
-      registrationDate: this.registrationDate,
-    };
+  toCompany(): Company {
+    return new Company(
+      undefined,
+      this.name,
+      this.cuit,
+      this.address,
+      this.phone,
+      this.email,
+      this.registrationDate
+    );
   }
 }
