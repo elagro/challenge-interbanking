@@ -21,7 +21,6 @@ export class CompanyController {
     private readonly getCompanyUseCases: GetCompanyUseCases,
     private readonly getCompaniesUseCases: GetCompaniesUseCases,
     private readonly getCompaniesByRegistrationDateUseCases: GetCompaniesByRegistrationDateUseCases,
-    private readonly getCompaniesWithTransfersByRegistrationDateUseCase: GetCompaniesWithTransfersByEffectiveDateUseCase,
     private readonly createCompanyUseCases: CreateCompanyUseCases,
   ) { }
 

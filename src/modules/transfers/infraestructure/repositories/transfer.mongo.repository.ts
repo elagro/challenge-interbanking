@@ -3,10 +3,7 @@ import { TransferRepository } from "../../domain/transfer.repository";
 import { TransferDocument, TransferEntityDto } from "./dtos/transfer.dto";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Company } from "src/modules/companies/domain/company";
 import { ObjectId } from "src/shared/types/types";
-import { CompanyMapper } from "src/modules/companies/infraestructure/repositories/mappers/company.mapper";
-import { CompanyEntityDto } from "src/modules/companies/infraestructure/repositories/dtos/company.dto";
 import { Transfer } from "../../domain/transfer";
 import { TransferMapper } from "./mappers/transfer.mapper";
 

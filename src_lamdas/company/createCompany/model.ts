@@ -12,22 +12,22 @@ export class CompanyEntity {
 
 export class CompanyRequest {
   @IsString()
-  name: string;
+  name?: string;
 
   @IsString()
-  cuit: string;
+  cuit?: string;
 
   @IsString()
-  address: string;
+  address?: string;
 
   @IsString()
-  phone: string;
+  phone?: string;
 
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsDate()
-  registrationDate: Date;
+  registrationDate?: Date;
 
   constructor(request: Partial<CompanyRequest>) {
     this.name = request.name;
@@ -35,17 +35,17 @@ export class CompanyRequest {
     this.address = request.address;
     this.phone = request.phone;
     this.email = request.email;
-    this.registrationDate = new Date(request.registrationDate);
+    this.registrationDate = request.registrationDate ? new Date(request.registrationDate) : undefined;
   }
 
   toEntity(): CompanyEntity {
     const companyEntity = new CompanyEntity();
-    companyEntity.name = this.name;
-    companyEntity.cuit = this.cuit;
-    companyEntity.address = this.address;
-    companyEntity.phone = this.phone;
-    companyEntity.email = this.email;
-    companyEntity.registrationDate = this.registrationDate;
+    companyEntity.name = this.name!;
+    companyEntity.cuit = this.cuit!;
+    companyEntity.address = this.address!;
+    companyEntity.phone = this.phone!;
+    companyEntity.email = this.email!;
+    companyEntity.registrationDate = this.registrationDate!;
     return companyEntity;
   }
 

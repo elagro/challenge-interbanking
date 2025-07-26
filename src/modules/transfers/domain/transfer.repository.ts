@@ -1,6 +1,5 @@
 import { ObjectId } from "src/shared/types/types";
 import { Transfer } from "./transfer";
-import { Company } from "src/modules/companies/domain/company";
 
 export interface TransferRepository {
   save(transfer: Transfer): Promise<Transfer>;
