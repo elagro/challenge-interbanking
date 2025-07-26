@@ -1,5 +1,4 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
-import { CompanyEntityDto } from "./dtos/company.dto";
 import { CompanyRepository } from "../../domain/company.repository";
 import { randomUUID } from "node:crypto";
 import { FilePersist } from "src/shared/filePersist/filePersist";

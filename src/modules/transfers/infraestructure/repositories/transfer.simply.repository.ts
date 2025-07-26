@@ -14,8 +14,12 @@ export class SimplyArrayTransferRepository implements TransferRepository, OnModu
 
     constructor() {
     }
-    findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<string[]> {
-        throw new Error("Method not implemented.");
+    async findCompaniesWithTransfersInDateRange(from: Date, to: Date): Promise<string[]> {
+        const transfers = await this.findByEffectiveDate(from, to);
+        if (!transfers) return [];
+        const companyIds = transfers.map(transfer => transfer.companyIdFrom.toHexString());
+        const uniqueCompanyIds = [...new Set(companyIds)];
+        return uniqueCompanyIds;
     }
 
     async onModuleInit() {
