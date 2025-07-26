@@ -90,7 +90,7 @@ export class TransferMongoRepository implements TransferRepository {
       },
     ]);
 
-    return result.map(item => item.companyId);
+    return result.map(item => item._id);
   }
 
 }
