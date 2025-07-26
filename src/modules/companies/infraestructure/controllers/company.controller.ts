@@ -37,11 +37,10 @@ export class CompanyController {
       if (registeredFrom && registeredTo) {
         companies = await this.getCompaniesByRegistrationDateUseCases.execute(new Date(registeredFrom), new Date(registeredTo));
       } else if (withTransfersSince) {
-        const companyIds = await this.getCompaniesWithTransfersByRegistrationDateUseCase.execute(new Date(withTransfersSince), new Date());
         // In a microservices architecture, you would typically fetch company details
         // from a dedicated company service using these IDs.
-        // For now, we'll just return the IDs.
-        const response = new ApiResponseSuccess(companyIds);
+        // For now, we'll just return an empty array.
+        const response = new ApiResponseSuccess([]);
         return response;
       } else {
         companies = await this.getCompaniesUseCases.execute();
